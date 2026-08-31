@@ -1,0 +1,72 @@
+# ─────────────────────────────────────────────────────────────
+# AI-DLC 산출물은 절대 무시하지 않는다.
+#   aidlc-docs/  와 aidlc-docs/audit.md 는 방법론 준수의 증거이므로
+#   어떤 경우에도 이 파일에 무시 규칙을 추가하지 않는다.
+#   (아래 negation 은 상위 규칙에 의한 실수 제외를 막는 안전장치다.)
+!aidlc-docs/
+!aidlc-docs/**
+!aidlc-docs/audit.md
+!aidlc-docs/aidlc-state.md
+# ─────────────────────────────────────────────────────────────
+
+# 런타임/커서 파일 (도구가 세션 중 생성하는 임시 상태 — 커밋 대상 아님)
+active-space
+active-space/
+**/active-space
+.aidlc-recovery.md
+**/.aidlc-recovery.md
+runtime-graph.json
+**/runtime-graph.json
+
+# 비밀값
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.mv.db
+*.trace.db
+data/
+backend/data/
+
+# 의존성
+node_modules/
+.pnpm-store/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# 빌드 산출물
+dist/
+build/
+out/
+.next/
+.nuxt/
+.output/
+target/
+*.tsbuildinfo
+
+# 테스트/커버리지
+coverage/
+.pytest_cache/
+.nyc_output/
+
+# IaC 로컬 상태
+.terraform/
+*.tfstate
+*.tfstate.*
+cdk.out/
+.serverless/
+
+# 로그·임시
+*.log
+npm-debug.log*
+tmp/
+.cache/
+
+# OS / 에디터
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
