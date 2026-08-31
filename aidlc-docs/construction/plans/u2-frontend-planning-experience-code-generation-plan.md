@@ -72,7 +72,7 @@ deterministic.
 `unit-of-work.md` requires Playwright journeys against a real U1 on the in-memory H2 profile.
 
 - **(A) Playwright starts and stops U1 itself (recommended)** — a `webServer` entry runs the Maven
-  wrapper with the test profile, waits for `/api/v1/health`, and tears it down. One command
+  wrapper with the test profile, waits for `/actuator/health`, and tears it down. One command
   (`npm run test:e2e`) works locally and in CI, at the cost of a JVM boot inside the E2E run.
 - **(B) Assume an already-running U1** — the script only checks health and fails fast with
   instructions. Faster loop while developing, but CI needs separate orchestration.
@@ -80,7 +80,7 @@ deterministic.
   extra branch to maintain.
 
 [Answer]: **(A) Playwright starts and stops U1 itself.** The Playwright `webServer` config runs the
-Maven wrapper on the in-memory test profile, waits on `/api/v1/health`, and tears it down afterwards,
+Maven wrapper on the in-memory test profile, waits on `/actuator/health`, and tears it down afterwards,
 so `npm run test:e2e` is the single command locally and in CI.
 
 ## Generation Steps
@@ -122,19 +122,24 @@ code batch, as it did for U1.
 
 ### Step 3 - Pure Core Tests First (time, geometry, capacity)
 
-- [ ] Create failing tests under `frontend/src/shared/time/` and `frontend/src/shared/grid/` for ISO
+- [x] Create failing tests under `frontend/src/shared/time/` and `frontend/src/shared/grid/` for ISO
       parse/format round trips, 15-minute alignment, `slotSpan = estimateMinutes / 15`, the
       08:00~22:00 window, week ranges and derived available minutes.
-- [ ] Add reusable fast-check generators for `TaskView`, `ScheduleView` and drop positions with seed
+- [x] Add reusable fast-check generators for `TaskView`, `ScheduleView` and drop positions with seed
       logging (PBT-02, PBT-03, PBT-07, PBT-08, PBT-09).
-- [ ] Confirm the tests fail for missing implementation.
+- [x] Confirm the tests fail for missing implementation.
+      **Done.** All three suites failed first because `calendar`, `geometry` and `capacity` did not
+      exist. The UR-012 exact-midpoint ambiguity was resolved by the user as option A: round upward.
 
 ### Step 4 - Pure Core Implementation
 
-- [ ] Implement the geometry and time helpers as pure functions with no DOM, cache or network access,
+- [x] Implement the geometry and time helpers as pure functions with no DOM, cache or network access,
       each carrying its stable FR/UR/PBT ID in a docstring.
-- [ ] Make Step 3 tests pass, add a fixed regression example for every shrunk counterexample, run the
+- [x] Make Step 3 tests pass, add a fixed regression example for every shrunk counterexample, run the
       security review, mark Steps 3~4.
+      **Done.** 20 Step 3~4 tests pass with fixed seed `20260901`; shrinking remains enabled and no
+      counterexample was found, so no new shrunk regression case was required. Full `npm run verify`
+      passes with 21 tests, 96.29% line and 88.76% branch coverage, and a 58.0KB gzip bundle.
 
 ### Step 5 - Transport Tests First (client, errors, mocks)
 

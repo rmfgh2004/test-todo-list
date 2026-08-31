@@ -2,7 +2,7 @@
 
 - **작성 시각**: 2026-08-31 22:05 (KST)
 - **현재 단계**: CONSTRUCTION / U2 Code Generation Part 2 실행 중
-- **진행률**: 계획서 14단계 중 **Step 1~2 완료**, Step 3부터 남음
+- **진행률**: 계획서 14단계 중 **Step 1~4 완료**, Step 5부터 남음
 - **차단 요소**: 없음. 설계 게이트는 모두 닫혔고 코드 생성 계획도 승인됐다.
 
 ---
@@ -31,7 +31,7 @@
    남긴다. 변경 요청은 어떤 경우에도 자동 재시도하지 않는다. 간격과 상한은 주입 가능한 상수로
    두어 테스트를 결정론적으로 만든다.
 3. **E2E의 U1 확보 = Playwright가 직접 기동·종료**. `webServer`가 Maven wrapper를 in-memory
-   프로필로 띄우고 `/api/v1/health`를 기다린 뒤 종료한다. 로컬·CI 모두 `npm run test:e2e` 한 줄.
+   프로필로 띄우고 `/actuator/health`를 기다린 뒤 종료한다. 로컬·CI 모두 `npm run test:e2e` 한 줄.
 
 ### Step 1 — 프론트엔드 스캐폴드와 검증 게이트 (완료)
 
@@ -83,12 +83,12 @@
 
 ## 2. 다음 사람이 바로 할 일
 
-계획서 **Step 3**부터 순서대로 이어가면 된다. 각 단계는 test-first이며, 완료 즉시 계획서
+계획서 **Step 5**부터 순서대로 이어가면 된다. 각 단계는 test-first이며, 완료 즉시 계획서
 체크박스를 `[x]`로 갱신하는 것이 규칙이다(AI-DLC 규칙: 같은 상호작용 안에서 갱신).
 
 | 다음 | 내용 |
 |---|---|
-| Step 3~4 | 순수 시간·그리드 코어. fast-check로 PBT-02/03/07/08/09, seed 로깅과 반례 회귀 예제 |
+| Step 3~4 | **완료** — 순수 시간·그리드 코어, fast-check PBT, seed `20260901` |
 | Step 5~6 | MSW 핸들러 → fetch 래퍼, 오류 정규화기(`SafeApiError` 7종), 연결 모니터(5초/2분) |
 | Step 7~8 | 캐시 키·범위 무효화, 스냅샷 롤백, single-flight, S-F03 상태기계 |
 | Step 9~10 | **시안 15장을 열어 토큰 추출** → 라이트/다크 토큰, 셸, 오류 경계, live region 2개, 배너 |
@@ -163,11 +163,17 @@ cd ../backend && ./mvnw -Dtest=OpenApiContractDriftTest test
 
 ## 5. 커밋 상태
 
-이번 세션의 변경은 **아직 커밋되지 않았다**. 커밋 대상:
+후속 상태 업데이트(2026-09-01): 아래 변경은 `c94db66`
+(`feat(frontend): scaffold U2 with verification gates and close the 429 contract gap`)로 로컬
+`main`에 커밋됐다.
 
-- `frontend/` 전체 (신규, `node_modules`·`dist`·`coverage` 제외)
-- `backend/openapi/planning-api.yaml` (429 문서화)
-- `backend/src/test/.../OpenApiContractDriftTest.java` (검사 3건 추가)
-- `aidlc-docs/` — state, audit, 계획서, 이 인수인계서
+- `frontend/` 전체 (`node_modules`·`dist`·`coverage` 제외)
+- `backend/openapi/planning-api.yaml`의 429 문서화
+- `backend/src/test/.../OpenApiContractDriftTest.java`의 검사 3건
+- U2 설계·계획·감사·인수인계 문서
 
-`origin/main`은 여전히 U1 승인 커밋(2cd6c4a)에 있다.
+`origin/main`은 여전히 U1 승인 커밋 `2cd6c4a`에 있어 로컬 `main`이 한 커밋 앞선다.
+
+후속 구현 업데이트(2026-09-01): Steps 3~4 순수 시간·그리드 코어와 테스트는 `24f1077`
+(`feat(frontend): add pure planning time and grid core`)로 커밋됐다. 이후 AI-DLC 상태·계획·감사·
+보안 리뷰 문서는 별도의 문서 커밋으로 관리한다.
