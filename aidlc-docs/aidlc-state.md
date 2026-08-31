@@ -3,7 +3,7 @@
 ## Project Information
 - **Project Type**: Greenfield
 - **Start Date**: 2026-08-30T14:54:39+09:00
-- **Current Stage**: CONSTRUCTION - U1 Backend Planning Core - Code Generation Part 2 Step 9
+- **Current Stage**: CONSTRUCTION - U1 Backend Planning Core - Code Generation Part 2 Step 11
 
 ## Workspace State
 - **Existing Code**: No
@@ -33,7 +33,7 @@
 - [ ] NFR Requirements per Unit - EXECUTE (U1 complete; U2 pending)
 - [ ] NFR Design per Unit - EXECUTE (U1 complete; U2 pending)
 - [x] Infrastructure Design - SKIP (local-only, no infrastructure services)
-- [ ] Code Generation per Unit - EXECUTE (U1 Steps 1~8 complete; Step 9 REST contract tests next; U2 pending)
+- [ ] Code Generation per Unit - EXECUTE (U1 Steps 1~10 complete; Steps 11~12 security platform next; U2 pending)
 - [ ] Build and Test - EXECUTE
 
 ## Extension Configuration
@@ -44,20 +44,23 @@
 | Property-Based Testing | Yes | Partial: PBT-02, PBT-03, PBT-07, PBT-08, PBT-09 | Requirements Analysis |
 
 ## Current Blocker
-Pre-code baseline commit `19f1467` is pushed to `origin/main`. The U1 code generation plan is approved;
-Steps 1~8 scaffold/domain/application/persistence and security reviews passed. The backend core checkpoint
-is ready to commit and push; Step 9 REST contract tests follow after the checkpoint.
+None. Steps 1~10 are complete and `./mvnw verify` passes with 100 tests, the OpenAPI route-drift check and
+the format gate. Two design questions were resolved with the user during Step 9~10: PATCH replaces the full
+task content set, and a changed estimate resizes an existing placement in place under the FR-007 conflict
+rules. Steps 11~12 add the ordered security platform (request ID, CORS, headers, body limit, rate limit,
+explicit route allowlist and encrypted file profile), which also completes the SECURITY-08 obligation
+carried from the Step 10 review.
 
 ## Execution Plan Summary
 - **Execution Units**: 2 (Backend Planning Core, Frontend Planning Experience)
 - **Execute**: Application Design, Units Generation, Functional Design, NFR Requirements,
   NFR Design, Code Generation, Build and Test
 - **Skip**: Reverse Engineering, Infrastructure Design, Operations
-- **Next Stage After Approval**: U1 Backend Planning Core - generated code review
+- **Next Stage After Approval**: U1 Steps 11~14, then the U1 completion gate before U2
 
 ## Repository
 - **Remote**: https://github.com/rmfgh2004/test-todo-list.git
-- **Remote State**: `origin/main` at backend core checkpoint `1bd9650`
+- **Remote State**: `origin/main` at REST adapter checkpoint (Steps 9~10)
 
 ## Design Inputs
 - **Location**: aidlc-inputs/design/

@@ -750,3 +750,146 @@
   계획을 검증한 뒤 Step 9부터 REST, security, backend gate, U2 React 순으로 계속 구현한다.
 
 ---
+## Session Resume — Claude Code로 U1 Step 9 이후 개발 재개
+
+- **[타임스탬프]**: 2026-08-31 20:05:00 (KST)
+- **[사용자 지시 원문]**:
+  > 이 프로젝트의 개발을 이어서 진행해줘.
+  >
+  >   반드시 작업 전에 다음을 순서대로 읽어:
+  >   1. CLAUDE.md
+  >   2. .aidlc-rule-details/core-workflow.md 전
+  >   문과 여기서 요구하는 관련 규칙
+  >   3. aidlc-docs/aidlc-state.md
+  >   4. aidlc-docs/construction/plans/u1-
+  >   backend-planning-core-code-generation-
+  >   plan.md
+  >   5. aidlc-docs/construction/u1-backend-
+  >   planning-core/code/security-review.md
+  >   6. aidlc-docs/audit.md 최근 기록
+  >   7. aidlc-inputs/ 전체 요구사항과 디자인 입
+  >   력
+  >
+  >   현재 Git 기준점은 origin/main의 9d2959b이
+  >   다.
+  >   완료된 작업을 다시 만들거나 되돌리지 마라.
+  >
+  >   현재 상태:
+  >   - U1 Backend Code Generation Steps 1~8 완
+  >   료
+  >   - Spring Boot 4.1.1 / Java 17
+  >   - 도메인, 애플리케이션 서비스, Flyway, H2/
+  >   JPA 영속성 완료
+  >   - 전체 ./mvnw verify 통과
+  >   - 다음 작업은 Step 9 REST Contract Tests
+  >   - 아직 REST 컨트롤러와 React UI는 없음
+  >
+  >   진행 순서:
+  >   1. git 상태와 현재 테스트 통과 여부 확인
+  >   2. Step 9 REST MockMvc 계약 테스트를 테스
+  >   트 우선으로 작성
+  >   3. Step 10 REST adapter와 OpenAPI 구현
+  >   4. Steps 11~12 보안 플랫폼 테스트와 구현
+  >   5. Steps 13~14 backend 전체 품질 게이트와
+  >   문서 완료
+  >   6. U1 완료 승인 게이트 후 U2 React + Vite
+  >   구현 진행
+  >
+  >   필수 규칙:
+  >   - aidlc-inputs/는 수정하지 않는다.
+  >   - 설계 결정과 phase 승인 게이트는 사용자에
+  >   게 질문한다.
+  >   - 승인된 설계 범위의 코드, 테스트, Git, 터
+  >   미널 명령은 추가 질문 없이 실행한다.
+  >   - 백엔드와 프론트엔드 모두 테스트를 작성한
+  >   다.
+  >   - 모든 코드 변경 묶음마다 security-
+  >   review.md에 보안 체크리스트 결과를 append
+  >   한다.
+  >   - 모든 사용자 입력을 원문 그대로 audit.md
+  >   에 append한다.
+  >   - 진행 상태를 aidlc-state.md와 코드 생성
+  >   계획 체크박스에 즉시 반영한다.
+  >   - 테스트, formatter, 보안 리뷰, 비밀값 검
+  >   사가 통과한 논리 단위마다 commit/push한다.
+  >   - 기존 사용자 변경을 되돌리지 않는다.
+  >   - 현재 계획에서 벗어나는 새 설계가 필요할
+  >   때만 선택지를 질문한다.
+  >
+  >   먼저 현재 상태를 짧게 보고한 다음 Step 9
+  >   구현을 바로 시작해줘.
+  >
+  >   Claude가 완료된 설계를 다시 질문한다면 "기
+  >   존 승인 설계 유지, aidlc-state.md와 코드
+  >   생성 계획에서 재개"라고 답하면 됩니다.
+- **[AI 제안 요약]**: CLAUDE.md, `core-workflow.md`, `aidlc-state.md`, 승인된 U1 코드 생성 계획,
+  `security-review.md`, audit 최근 기록과 `aidlc-inputs/` 요구사항·정책을 읽었다. 작업 트리는 clean이고
+  HEAD는 `9d2959b`이며 `./mvnw verify`가 exit 0으로 통과함을 확인했다. 승인된 설계(component-methods
+  B-C07 엔드포인트 목록, business-logic-model, nfr-design)를 기준으로 Step 9 REST 계약 테스트를
+  테스트 우선으로 작성한 뒤 Step 10 어댑터를 구현하겠다고 제안했다. 승인 설계에는 있으나 아직 코드에
+  없는 `Task.update`, `PlanningService.update/unschedule/findById`는 새 설계가 아니라 승인 범위의
+  미구현 항목이므로 Step 9~10에서 채운다고 정리했다.
+- **[사용자 판단·승인 근거]**: 사용자는 완료된 설계를 재질문하지 말고 `aidlc-state.md`와 코드 생성
+  계획의 체크박스 기준으로 재개하라고 명시했으며, 승인된 설계 범위의 코드·테스트·Git 실행 권한을
+  이미 위임했다.
+- **[최종 결정]**: 기존 승인 설계를 유지한 채 U1 Code Generation Step 9부터 재개한다. Steps 1~8은
+  재작업하지 않는다. Step 9 MockMvc 계약 테스트를 먼저 작성해 실패를 확인한 뒤 Step 10으로 진행한다.
+
+---
+
+## U1 Code Generation Step 9~10 — 수정(PATCH) 계약 설계 결정
+
+- **[타임스탬프]**: 2026-08-31 20:12:00 (KST)
+- **[사용자 지시 원문]**:
+  > (다지선다 역질문에 대한 선택)
+  > Q1 "PATCH /api/v1/tasks/{id}의 수정 의미를 어떻게 확정할까요? (BR-006 "공급된 필드만 변경"이
+  > 부분 병합인지 전체 교체인지 모호합니다)" → **전체 내용 교체 (권장)**
+  > Q2 "이미 배치된(schedule이 있는) 할 일의 estimateMinutes를 수정하면 어떻게 처리할까요?
+  > 승인된 설계 문서에 정의가 없고, 도메인은 slot 길이 == estimate를 강제합니다."
+  > → **슬롯 자동 재계산 + 충돌 검사 (권장)**
+- **[AI 제안 요약]**: 승인된 설계 문서(BR-006, component-methods B-C01/B-C03)에 수정 의미가
+  모호하고, 배치된 할 일의 estimate 변경 규칙은 아예 정의가 없어 구현 전에 두 가지 선택지를 제시했다.
+  Q1은 (A) 전체 내용 교체 — title/priority/estimateMinutes 필수, description/dueDate 생략 시 비움,
+  FR-003과 동일 검증, 편집 폼 UI와 1:1 대응 / (B) 부분 병합 — 별도 clear 플래그 필요.
+  Q2는 (A) 시작 시각 유지 + 종료 시각 재계산 후 FR-007 충돌 흐름 재사용(겹치면 409 + 다음 후보,
+  저장 없음) / (B) 배치 중 estimate 변경 400 거부 / (C) 자동 배치 해제.
+- **[사용자 판단·승인 근거]**: 사용자는 두 질문 모두 권장안을 선택했다. 전체 교체는 FR-003 검증
+  규칙을 수정에도 그대로 적용하라는 FR-004 수용 기준과 정확히 일치하고 프론트 편집 폼과 대응이
+  단순하다. 슬롯 재계산 방식은 사용자가 직접 배치한 위치를 최대한 보존하면서 이미 승인된 FR-007
+  충돌 해결 UX(기존 유지 / 다음 슬롯 이동 / 취소)를 그대로 재사용하므로 새 UX를 만들지 않는다.
+- **[최종 결정]**: `PATCH /api/v1/tasks/{id}`는 내용 전체 교체 의미로 확정한다. body는
+  `expectedVersion`, `title`, `priority`, `estimateMinutes`를 필수로 받고 `description`, `dueDate`는
+  생략/null 시 값을 비운다. status와 schedule은 이 엔드포인트로 변경하지 않는다. estimateMinutes가
+  바뀌고 할 일이 이미 배치되어 있으면 시작 시각을 유지한 채 종료 시각을 재계산하고, 계획 창(08:00~22:00)을
+  벗어나면 400 `SCHEDULE_OUT_OF_WINDOW`, 다른 미완료 일정과 겹치면 저장 없이 409 `SCHEDULE_CONFLICT`와
+  다음 후보 슬롯을 반환한다. 이 결정을 Step 9 테스트에 먼저 반영한 뒤 Step 10에서 구현한다.
+
+---
+
+## U1 Code Generation Steps 9~10 — REST 어댑터와 OpenAPI 완료
+
+- **[타임스탬프]**: 2026-08-31 20:45:00 (KST)
+- **[사용자 지시 원문]**:
+  > 1번으로 해주고 swagger도 생성해주라.
+- **[AI 제안 요약]**: OpenAPI 계약 생성 방식으로 (1) YAML 수사 작성 + 실제 Spring 라우팅 테이블과
+  양방향 비교하는 drift 테스트 / (2) springdoc 3.0.1 런타임 의존성으로 DTO에서 자동 생성 두 가지를
+  제시했다. 1번은 런타임 문서 엔드포인트(/v3/api-docs, swagger-ui)를 만들지 않아 SECURITY-09에
+  더 부합하고, 2번은 스키마가 항상 코드와 일치하지만 검증되지 않은 신규 의존성과 차단해야 할
+  엔드포인트가 늘어난다고 설명했다.
+- **[사용자 판단·승인 근거]**: 사용자는 1번(수사 작성 + drift 테스트)을 선택하면서 Swagger 화면도
+  함께 제공하라고 지시했다. 계약의 단일 진실 원천은 체크인된 YAML로 유지하되, 사람이 API를 눈으로
+  확인할 수 있는 화면은 필요하다는 판단이다.
+- **[최종 결정]**: `backend/openapi/planning-api.yaml`을 직접 작성해 단일 진실 원천으로 삼고,
+  `OpenApiContractDriftTest`가 문서화된 path/method 집합과 실제 `/api/v1/**` 라우팅을 정확히
+  일치시킨다. Swagger UI는 CDN 없이 `org.webjars:swagger-ui` 5.29.4 정적 자산만 사용해
+  `/docs/index.html`에서 로컬 계약을 렌더링하고, 계약 파일은 빌드 시 단일 원본에서 복사되어
+  `/openapi/planning-api.yaml`로 제공된다. 페이지에 외부 URL이 없다는 점과 제공되는 바이트가
+  체크인 파일과 동일하다는 점을 테스트로 강제한다.
+  Steps 9~10 결과: `./mvnw verify` exit 0, 100개 테스트 전부 통과, 속성 검증 1,400회, 아키텍처
+  규칙, OpenAPI drift 검사, Spotless 통과. 보안 리뷰 PASS(차단 결함 없음)이며 SECURITY-08 경로
+  명시·본문 크기 제한·CORS·보안 헤더·rate limit은 Steps 11~12 의무로 이월했다.
+  TDD 과정에서 실제 결함 1건을 먼저 실패 테스트로 발견해 수정했다: 배치된 할 일의 estimate 확대 시
+  다음 후보 슬롯 탐색이 저장된 예전 estimate를 사용해 너무 짧은 후보를 제안했다.
+
+---
+

@@ -68,7 +68,7 @@ class PlanningServiceTest {
             new ScheduleTaskCommand(task.id(), MONDAY, LocalTime.of(9, 0), task.version()),
             "request-2");
 
-    assertThat(result).isInstanceOf(ScheduleOutcome.Scheduled.class);
+    assertThat(result).isInstanceOf(ScheduleOutcome.Committed.class);
     assertThat(tasks.findById(task.id()).orElseThrow().schedule()).isPresent();
     assertThat(audits.events).extracting(AuditEvent::action).containsExactly(AuditAction.SCHEDULED);
   }
@@ -197,6 +197,13 @@ class PlanningServiceTest {
       return data.values().stream()
           .filter(task -> task.schedule().map(slot -> week.contains(slot.date())).orElse(false))
           .filter(task -> task.status() == com.timetable.todo.planning.domain.TaskStatus.TODO)
+          .toList();
+    }
+
+    @Override
+    public List<Task> findScheduledInWeek(WeekRange week) {
+      return data.values().stream()
+          .filter(task -> task.schedule().map(slot -> week.contains(slot.date())).orElse(false))
           .toList();
     }
 

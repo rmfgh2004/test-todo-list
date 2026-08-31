@@ -102,19 +102,21 @@ code-change batch ends with the mandatory security checklist appended to
 
 ### Step 9 - REST Contract Tests First
 
-- [ ] Create failing MockMvc tests for task CRUD/completion, schedule conflict/candidate/unschedule, week,
+- [x] Create failing MockMvc tests for task CRUD/completion, schedule conflict/candidate/unschedule, week,
   backlog/list/detail, DTO validation, pagination and all safe error status/schema cases.
-- [ ] Cover malformed, boundary, oversized, wrong-media and conflicting requests without echoing input.
-- [ ] Confirm failing state before controller implementation.
+- [x] Cover malformed, boundary, oversized, wrong-media and conflicting requests without echoing input.
+- [x] Confirm failing state before controller implementation.
 - **Traceability**: FR-001~FR-010, FR-012; NFR-001, NFR-003~NFR-005, NFR-008; SECURITY-05, SECURITY-09.
 
 ### Step 10 - REST Web Adapter and OpenAPI
 
-- [ ] Create dedicated request/response DTOs, mappers and controllers under
+- [x] Create dedicated request/response DTOs, mappers and controllers under
   `backend/src/main/java/com/timetable/todo/planning/adapter/in/web/`.
-- [ ] Create safe error/conflict mapper and normalized OpenAPI generation/contract at
-  `backend/openapi/planning-api.yaml` without exposing JPA/domain/exception objects.
-- [ ] Make Step 9 tests pass, refactor, run the security review and immediately mark Steps 9~10.
+- [x] Create safe error/conflict mapper and a normalized OpenAPI contract at
+  `backend/openapi/planning-api.yaml` without exposing JPA/domain/exception objects. The contract is
+  authored directly and bound to the code by an automated route-drift test; a locally served Swagger UI
+  renders it with no CDN asset.
+- [x] Make Step 9 tests pass, refactor, run the security review and immediately mark Steps 9~10.
 - **Traceability**: FR-001~FR-010, FR-012; NFR-003, NFR-004, NFR-007, NFR-008; SECURITY-03, SECURITY-05,
   SECURITY-09, SECURITY-15.
 

@@ -70,6 +70,13 @@ public class TaskPersistenceAdapter implements TaskRepositoryPort {
   }
 
   @Override
+  public List<Task> findScheduledInWeek(WeekRange week) {
+    return repository.findScheduledInWeek(week.start(), week.endExclusive()).stream()
+        .map(this::toDomain)
+        .toList();
+  }
+
+  @Override
   public List<Task> findBacklog(int limit) {
     return repository.findBacklog(PageRequest.of(0, limit)).stream().map(this::toDomain).toList();
   }

@@ -220,3 +220,171 @@ entries state why the change does not exercise that boundary.
 | SECURITY-01~02, SECURITY-04, SECURITY-06~12, SECURITY-14 | N/A | no data, web, identity, supply-chain or observability boundary changed |
 
 **Blocking findings**: none.
+
+## 2026-08-31T19:58:00+09:00 - Step 9 REST Contract Tests First
+
+- **Changed files**: `backend/pom.xml` (test-scoped `spring-boot-webmvc-test`),
+  `AbstractApiContractTest`, `TaskCommandApiTest`, `TaskScheduleApiTest`, `PlanningQueryApiTest`,
+  `ApiErrorContractTest`, `PlanningTestStore`, `PlanningTestStoreConfiguration`.
+- **Stable IDs**: FR-001~FR-010, FR-013; NFR-001, NFR-003~NFR-006, NFR-008; SECURITY-05, SECURITY-09.
+- **Result**: PASS (test-only batch).
+- **TDD evidence**: 53 MockMvc contract tests execute and fail with `404`/missing-endpoint assertions
+  because no controller or error mapper exists yet; the Spring context itself boots, so the red state
+  is caused by the absent web adapter and not by broken wiring.
+
+### Checklist Result
+
+- [x] Tests pin an explicit allowlist contract for every input: title/description code-point bounds,
+  15-minute estimate grid, priority/status/sort/direction enums, ISO date/time, page `1~100` and
+  `expectedVersion`. (SECURITY-05)
+- [x] `assertSafeErrorPayload` asserts that no error body contains a framework package, Hibernate/SQL
+  text, `com.timetable` class name, the literal `Exception` or a filesystem path.
+- [x] Dedicated tests assert that rejected input is never echoed: oversized title/description, invalid
+  priority, malformed UUID, malformed date and an injection-shaped sort value.
+- [x] Conflict responses are asserted to carry slot times only and to contain no task title.
+- [x] No test writes a secret, credential or personal datum; all fixtures are synthetic.
+- [x] Persistence internals stay package-private; contract tests reach persisted state only through the
+  narrow `PlanningTestStore` projection, so no test binds to a JPA entity.
+- [x] The batch adds no endpoint, datasource, log statement or runtime dependency; the single new
+  dependency `spring-boot-webmvc-test` is Spring Boot BOM-managed, test-scoped and Maven Central hosted.
+- [x] Filters are disabled in these tests on purpose; request ID, CORS, headers, body limit and rate
+  limiting are covered by the Step 11 platform tests and are not silently assumed to pass here.
+- [x] Audit assertions read only action and changed-field names, proving content stays out of audit rows.
+  (SECURITY-13)
+
+### Security Baseline Status
+
+| Rules | Status for this change | Evidence |
+|---|---|---|
+| SECURITY-05 | PASS | typed allowlist and boundary expectations pinned before implementation |
+| SECURITY-03 | PASS | no-echo and no-internal-detail assertions on every error path |
+| SECURITY-09 | PASS | test-scoped BOM-managed dependency; no console, sample route or extra surface |
+| SECURITY-13 | PASS | audit projection asserts structural fields only |
+| SECURITY-01~02, SECURITY-04, SECURITY-06~08, SECURITY-10~12, SECURITY-14, SECURITY-15 | N/A | test-only batch; runtime web/platform boundary lands in Steps 10~12 |
+
+**Blocking findings**: none.
+
+## 2026-08-31T20:41:00+09:00 - Step 10 REST Web Adapter, OpenAPI and Local API Docs
+
+- **Changed files**: request/response DTOs, `QuarterHourEstimate(+Validator)`, `TaskViewMapper`,
+  `TaskController`, `TaskScheduleController`, `WeeklyPlanController`, `ScheduleOutcomeResponder`,
+  `ApiError`, `ApiErrorHandler`, `PlanningConfiguration`, `platform/RequestCorrelation`,
+  `Task.update`, `PlanningService.update/unschedule/findById/weekPlan`, `UpdateTaskCommand`,
+  `UnscheduleTaskCommand`, `WeeklyPlan`, `ScheduleOutcome.Committed`, `StaleTaskVersionException`,
+  `TaskRepositoryPort.findScheduledInWeek` and its JPA query, `backend/openapi/planning-api.yaml`,
+  `static/docs/*`, `OpenApiContractDriftTest`, `ApiDocumentationTest`, `backend/pom.xml`.
+- **Stable IDs**: FR-001~FR-010, FR-012, FR-013; NFR-001, NFR-003~NFR-008; SECURITY-03, SECURITY-04,
+  SECURITY-05, SECURITY-09, SECURITY-13, SECURITY-15.
+- **Result**: PASS.
+- **Automated evidence**: `./mvnw verify` exits 0 with 100/100 tests, 1,400 property checks, the
+  architecture rule, the OpenAPI route-drift check and the Spotless format gate.
+
+### A. Input and Output
+
+- [x] Every request field has a type, size, range and format allowlist: `@NotBlank @Size(max=120)`
+  title, `@Size(max=2000)` description, `Priority`/`TaskStatus`/`TaskSort`/`SortDirection` enums,
+  `@QuarterHourEstimate` for the 15~840 minute grid, ISO date, `HH:mm` time and
+  `@NotNull @PositiveOrZero` expected version. Page bounds are re-checked in `TaskListQuery`.
+  (SECURITY-05)
+- [x] Title and description cross the boundary as plain JSON text only; no template, HTML fragment or
+  string-built markup exists in the adapter.
+- [x] No SQL, command or path is built from user text. Filters map allowlisted enums to fixed
+  specifications and sorting uses `TaskSort.property()`, never a client-supplied string.
+- [x] `ApiError` carries an allowlisted code, an authored message, the request ID and allowlisted
+  field names only. Automated tests assert that a rejected title, description, priority, UUID, date
+  and injection-shaped sort value are never echoed, and that no framework type, Hibernate/SQL text,
+  `com.timetable` class name, stack trace or filesystem path appears in any error body.
+- [x] Collections are bounded: page size 1~100 (default 25), week reads are limited to seven days and
+  the weekly backlog is capped at 100 rows. The HTTP body-size limit is Step 12 platform work and is
+  explicitly still open.
+
+### B. Access and Boundaries
+
+- [x] Public routes are the nine documented `/api/v1/**` operations plus the local docs assets
+  (`/docs/**`, `/openapi/planning-api.yaml`, `/webjars/swagger-ui/**`). Local use has no
+  authentication by approved design; Step 12 must declare each of these `permitAll` explicitly and
+  deny every unmatched route. (SECURITY-08)
+- [x] N/A in this batch - loopback binding and CORS allowlist are configured and tested in Step 12.
+- [x] Every state change is re-validated by the domain and application layer inside the transaction:
+  version match, 15-minute alignment, planning window, half-open overlap and delete confirmation.
+  The client cannot skip a rule by shaping a request.
+- [x] N/A in this batch - rate limiting is introduced and tested in Steps 11~12.
+
+### C. Data Protection
+
+- [x] No secret, DB key, `.env` or H2 file is added or tracked; a repository scan found none.
+- [x] N/A - the encrypted file datasource is Step 12 work.
+- [x] The only new log statement is the unexpected-failure record, which logs an event name and the
+  request ID and passes the throwable to the logger without ever serializing it to the client.
+  No request body, task title, description or parameter value is logged. (SECURITY-03)
+- [x] All mutations remain inside the existing `@Transactional` application boundary; a conflict,
+  stale version, not-found or validation failure performs no write.
+- [x] Audit rows keep IDs, action, actor, request ID, time and structural field names only; the new
+  update path records `UPDATED:content` with no task content. (SECURITY-13)
+
+### D. Web and Browser
+
+- [x] The Swagger UI page loads its CSS, bundle and preset from this application's own
+  `/webjars/**` path and reads the local contract, so no CDN or external origin is referenced.
+  A test asserts the page and its initializer contain no `http://` or `https://` URL. (SECURITY-04)
+- [x] No `eval`, `new Function`, dynamic script construction or unsafe HTML sink was added; the
+  initializer only passes a local URL to Swagger UI.
+- [x] No frontend storage, credential or permission datum is written.
+
+### E. Exceptions and Observability
+
+- [x] `ApiErrorHandler` is the single boundary: not-found, stale version, unconfirmed deletion,
+  domain rule, bean validation, parameter validation, type mismatch, missing parameter, unreadable
+  body, media type, method, unknown route and unexpected failure each map to one fixed status and
+  code. Nothing reaches the default container error page. (SECURITY-15)
+- [x] Every response body carries a request ID from `RequestCorrelation`, which reads the MDC entry
+  the Step 12 filter will populate and otherwise generates a server-side value, so no request can
+  answer without correlation. (NFR-008)
+- [x] Expected validation and conflict outcomes are not logged as errors; only the unexpected branch
+  logs, and it logs once. (SECURITY-03)
+
+### F. Supply Chain and Configuration
+
+- [x] Two dependencies were added: `spring-boot-webmvc-test` (test scope, Spring Boot BOM version)
+  and `org.webjars:swagger-ui` 5.29.4 (runtime, static assets only, no executable server code and no
+  new endpoint handler). Both come from Maven Central and carry Apache-2.0 licensing.
+- [x] Versions resolve deterministically through the Spring Boot BOM and the pinned
+  `swagger-ui.version` property. (SECURITY-10)
+- [x] The OWASP vulnerability scan stays the separately gated `security-scan` profile command; the
+  CycloneDX SBOM still generates during `verify`.
+- [x] No H2 console, sample controller or springdoc runtime documentation endpoint was enabled. The
+  contract is a static file, so `/v3/api-docs` and a live spec generator do not exist. The docs
+  assets are deliberate and must be reviewed again when a non-local deployment is ever considered.
+  (SECURITY-09)
+- [x] Build outputs stay ignored; the published contract is copied from the single checked-in source
+  during `process-resources`, and a test asserts the served bytes equal the checked-in file.
+
+### G. Test Evidence
+
+- [x] 64 MockMvc contract tests cover success, malformed, boundary, oversized, wrong-media-type,
+  wrong-method, unknown-route, not-found, stale-version and conflict paths.
+- [x] Safe error shape, no-echo behaviour, request-ID presence and the exact error field set are
+  asserted automatically. Security headers, CORS and rate limiting remain Step 11 obligations and are
+  not claimed here.
+- [x] The conflict-on-resize behaviour was written as a failing test first and exposed a real defect:
+  candidate search used the stored estimate instead of the proposed interval length. The fix derives
+  the length from the proposed slot, so a resized placement can no longer be offered a candidate that
+  is too short.
+- [x] All fixtures are synthetic; no secret or personal datum appears in tests or the contract.
+
+### Security Baseline Status
+
+| Rules | Status for this change | Evidence |
+|---|---|---|
+| SECURITY-03 | PASS | authored messages, no echo, no internal detail, single correlated failure log |
+| SECURITY-04 | PASS | fully self-hosted documentation assets, no CDN or dynamic execution |
+| SECURITY-05 | PASS | typed DTO allowlists plus domain revalidation before any write |
+| SECURITY-08 | Partial PASS | public routes are enumerated here; explicit declaration and unmatched denial land in Step 12 |
+| SECURITY-09 | PASS | no console, sample route or live spec endpoint; static contract only |
+| SECURITY-10 | PASS | BOM-managed and pinned dependency versions, SBOM generated |
+| SECURITY-13 | PASS | append-only structural audit including the new UPDATED action |
+| SECURITY-15 | PASS | single safe error boundary, no write on any rejected outcome |
+| SECURITY-01~02, SECURITY-06~07, SECURITY-11~12, SECURITY-14 | N/A | data-at-rest, identity, rate limit and health boundaries are Step 11~12 work |
+
+**Blocking findings**: none. **Carried obligations**: SECURITY-08 route declaration, body-size limit,
+CORS, security headers and rate limiting must be completed in Steps 11~12 before U1 closes.

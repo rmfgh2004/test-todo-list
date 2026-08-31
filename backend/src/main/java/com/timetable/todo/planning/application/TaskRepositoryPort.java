@@ -15,7 +15,11 @@ public interface TaskRepositoryPort {
 
   void delete(TaskId id);
 
+  /** FR-007: Returns incomplete placements only, because completed work never blocks a slot. */
   List<Task> findScheduledIncomplete(WeekRange week);
+
+  /** FR-001, FR-009: Returns every placement in the week, including completed work. */
+  List<Task> findScheduledInWeek(WeekRange week);
 
   List<Task> findBacklog(int limit);
 

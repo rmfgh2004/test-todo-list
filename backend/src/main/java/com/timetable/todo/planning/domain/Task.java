@@ -94,6 +94,41 @@ public final class Task {
         updatedAt);
   }
 
+  /**
+   * FR-004, BR-006: Replaces the full content set, keeping status and placement ownership
+   * elsewhere.
+   *
+   * <p>When a new estimate resizes an existing placement the start time is preserved and the end
+   * time is recalculated, so an out-of-window result fails here before any persistence work.
+   */
+  public Task update(
+      String newTitle,
+      String newDescription,
+      Priority newPriority,
+      int newEstimateMinutes,
+      LocalDate newDueDate,
+      Instant now) {
+    Objects.requireNonNull(now, "Update time is required");
+    if (now.isBefore(updatedAt)) {
+      throw new DomainValidationException("TASK_TIME_INVALID", "Update time cannot move backwards");
+    }
+    EstimateMinutes newEstimate = EstimateMinutes.of(newEstimateMinutes);
+    ScheduleSlot resized =
+        schedule == null ? null : ScheduleSlot.of(schedule.date(), schedule.start(), newEstimate);
+    return new Task(
+        id,
+        TaskTitle.of(newTitle),
+        TaskDescription.of(newDescription),
+        Objects.requireNonNull(newPriority, "Task priority is required"),
+        newEstimate,
+        newDueDate,
+        status,
+        resized,
+        version + 1,
+        createdAt,
+        now);
+  }
+
   public Task schedule(ScheduleSlot newSchedule, Instant now) {
     Objects.requireNonNull(newSchedule, "Schedule is required");
     if (newSchedule.durationMinutes() != estimate.value()) {

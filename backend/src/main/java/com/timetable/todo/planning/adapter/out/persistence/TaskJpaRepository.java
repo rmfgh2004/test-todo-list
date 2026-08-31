@@ -33,6 +33,14 @@ interface TaskJpaRepository
 
   @EntityGraph(attributePaths = "schedule")
   @Query(
+      "select t from TaskJpaEntity t join t.schedule s "
+          + "where s.date >= :start and s.date < :end "
+          + "order by s.date, s.start, t.id")
+  List<TaskJpaEntity> findScheduledInWeek(
+      @Param("start") LocalDate start, @Param("end") LocalDate end);
+
+  @EntityGraph(attributePaths = "schedule")
+  @Query(
       "select t from TaskJpaEntity t left join t.schedule s "
           + "where t.status = 'TODO' and s is null "
           + "order by case when t.dueDate is null then 1 else 0 end, t.dueDate, "
