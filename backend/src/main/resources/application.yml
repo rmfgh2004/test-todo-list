@@ -1,0 +1,52 @@
+# NFR-003: Local-only defaults. Every limit also has a code-level default in PlatformProperties, so a
+# replaced or missing file can never widen a boundary. No property here holds a secret.
+server:
+  address: 127.0.0.1
+  port: 8080
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  application:
+    name: timetable-todo-backend
+  main:
+    banner-mode: "off"
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    show-sql: false
+  flyway:
+    enabled: true
+
+# SECURITY-14: Health only. Environment, beans, mappings, config properties, heap dump, loggers and
+# metrics are never exposed over HTTP.
+management:
+  endpoints:
+    access:
+      default: none
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      access: read-only
+      show-details: never
+      show-components: never
+
+planning:
+  platform:
+    allowed-origins:
+      - http://127.0.0.1:5173
+      - http://localhost:5173
+    max-request-body-bytes: 65536
+    rate-limit:
+      capacity: 120
+      refill-per-minute: 120
+      max-clients: 1000
+
+logging:
+  pattern:
+    # NFR-008: timestamp, level, request ID and message; never a request body or task content.
+    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %-5level [%X{requestId:-}] %logger{36} - %msg%n"

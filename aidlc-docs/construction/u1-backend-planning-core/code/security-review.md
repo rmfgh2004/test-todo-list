@@ -388,3 +388,120 @@ entries state why the change does not exercise that boundary.
 
 **Blocking findings**: none. **Carried obligations**: SECURITY-08 route declaration, body-size limit,
 CORS, security headers and rate limiting must be completed in Steps 11~12 before U1 closes.
+
+## 2026-08-31T21:20:00+09:00 - Steps 11~12 Security, Configuration and Observability Platform
+
+- **Changed files**: `PlatformProperties`, `PlatformConfiguration`, `PlatformSecurityConfiguration`,
+  `RequestIdFilter`, `RequestBodyLimitFilter`, `RateLimitFilter`, `TokenBucketRateLimiter`,
+  `SafeErrorWriter`, `FileDatasourceGuard`, `FileDatasourceValidator`, `application.yml`,
+  `application-file.yml`, `application-test.yml` (renamed from the shadowing test `application.yml`),
+  `SecurityPlatformTest`, `RateLimitTest`, `FileDatasourceGuardTest`, `backend/pom.xml`.
+- **Stable IDs**: NFR-003, NFR-006, NFR-008; SECURITY-01, SECURITY-03~05, SECURITY-07~12,
+  SECURITY-14, SECURITY-15.
+- **Result**: PASS.
+- **Automated evidence**: `./mvnw verify` exits 0 with 122/122 tests. 22 of them run the full filter
+  chain, which the REST contract tests deliberately bypass.
+
+### A. Input and Output
+
+- [x] The `X-Request-Id` header is accepted only against `^[A-Za-z0-9._-]{8,64}$`; a script-shaped or
+  200-character value is discarded and replaced by a server value, verified by test. (SECURITY-05)
+- [x] No user string is rendered as HTML anywhere in the platform.
+- [x] No SQL, command or path is built from request data in this batch.
+- [x] Filter-level rejections use the same `ApiError` shape through `SafeErrorWriter`, so a 413 or 429
+  exposes only a code, an authored message and the request ID.
+- [x] The body limit rejects a declared length above 64 KiB before parsing; DTO size bounds and the
+  1~100 page cap still bound everything that gets through.
+
+### B. Access and Boundaries
+
+- [x] Public routes are now declared explicitly: `/api/v1/**`, GET `/docs/**`, `/openapi/**`,
+  `/webjars/**` and `/actuator/health`. `anyRequest().denyAll()` closes everything else, anonymous
+  authentication is disabled, and a test proves an undeclared route returns 403. This closes the
+  SECURITY-08 obligation carried from the Step 10 review.
+- [x] The server binds `127.0.0.1` and CORS allows only the exact configured loopback origins.
+  `PlatformProperties` throws at startup if any origin contains a wildcard, and a test proves an
+  outside origin is refused with no `Access-Control-Allow-Origin` header. (SECURITY-08)
+- [x] All state changes still run through the domain and application rules; the platform only rejects
+  earlier, never approves.
+- [x] The bounded token bucket runs before the dispatcher, so no command executes for a rejected
+  request. Its client cache is a fixed-size LRU map and a limiter failure fails closed for every
+  mutating method. (SECURITY-11, SECURITY-15)
+
+### C. Data Protection
+
+- [x] No secret, key, `.env` or database file is tracked. `application-file.yml` references
+  `${PLANNING_DB_PASSWORD:}` with no usable default and the repository scan found no key material.
+  (SECURITY-01, SECURITY-12)
+- [x] The file profile requires `jdbc:h2:file:` plus `CIPHER=AES` and a non-blank runtime key;
+  `FileDatasourceGuard` fails startup otherwise and its messages name only the environment variable,
+  never the supplied value. A `tcp://` URL is rejected outright, so no H2 server or console can be
+  reached. (SECURITY-01, SECURITY-09, SECURITY-12)
+- [x] The log pattern emits timestamp, level, request ID and message only. No filter logs a header,
+  body, parameter or key. (SECURITY-03)
+- [x] Transaction and rollback behaviour is unchanged and still covered by the persistence tests.
+- [x] Audit behaviour is unchanged; the correlation ID recorded on each event now comes from the
+  filter rather than a per-request fallback. (SECURITY-13)
+
+### D. Web and Browser
+
+- [x] `nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer` and a Content Security
+  Policy are asserted by test. HSTS is explicitly disabled so plain local HTTP never claims transport
+  security it does not have. (SECURITY-04)
+- [x] The CSP allows `'unsafe-inline'` for styles only, because Swagger UI injects its own style
+  elements. Script, object, frame-ancestors, base-uri and form-action stay restricted to `'self'` or
+  `'none'`, and this relaxation is limited to styling with no script implication.
+- [x] No CDN, external script or dynamic code execution was added.
+- [x] No frontend storage or credential handling exists.
+
+### E. Exceptions and Observability
+
+- [x] Every boundary has an explicit rejection path: oversized body, exhausted bucket, denied route,
+  unmatched route and unexpected failure all produce a controlled JSON body. (SECURITY-15)
+- [x] The MDC entry is removed in a `finally` block on the success, rejection and exception paths, and
+  a test asserts no correlation value leaks between requests. (NFR-008)
+- [x] Structured output carries timestamp, level, request ID and message. (SECURITY-03)
+- [x] Denials record no attacker-usable detail; the client receives a generic message plus the ID.
+
+### F. Supply Chain and Configuration
+
+- [x] No new dependency was added in this batch; only Spring Boot and Spring Security modules already
+  present are configured.
+- [x] Versions still resolve through the Spring Boot BOM and pinned properties. (SECURITY-10)
+- [x] The OWASP scan remains the gated `security-scan` profile; the CycloneDX SBOM still generates.
+- [x] Actuator access defaults to `none` with health-only exposure, `show-details: never` and
+  `show-components: never`. Tests prove env, beans, mappings, configprops and loggers are unavailable
+  and that no H2 console route exists. (SECURITY-09, SECURITY-14)
+- [x] Every platform limit also has a code-level default in `PlatformProperties`, so a missing or
+  replaced configuration file cannot silently widen a boundary. The test configuration was renamed to
+  `application-test.yml` and activated by a surefire profile property, so it no longer shadows the
+  production `application.yml` and tests now exercise the real platform settings.
+
+### G. Test Evidence
+
+- [x] Correlation, header, CORS, route-denial, body-limit, rate-limit and health behaviour each have a
+  dedicated automated test rather than a configuration assertion.
+- [x] Security headers, CORS, rate limiting and safe error responses are all automated. (checklist G2)
+- [x] The datasource guard is tested for a missing key, a blank key, an unencrypted URL, a TCP URL and
+  the valid case, including an assertion that a failure message never contains the supplied key.
+- [x] All fixtures are synthetic; no real secret or personal datum exists in any test.
+
+### Security Baseline Status
+
+| Rules | Status for this change | Evidence |
+|---|---|---|
+| SECURITY-01 | PASS | encrypted-file requirement enforced at startup; no tracked database file |
+| SECURITY-03 | PASS | request-ID allowlist, redacted log pattern, no echo in any rejection |
+| SECURITY-04 | PASS | CSP, nosniff, frame deny, referrer policy; HSTS deliberately absent on HTTP |
+| SECURITY-05 | PASS | header allowlist and body-size rejection before parsing |
+| SECURITY-07 | PASS | stateless session policy, CSRF disabled only for the JSON API behind exact CORS |
+| SECURITY-08 | PASS | every public route declared; all others denied |
+| SECURITY-09 | PASS | health-only Actuator, no console, no TCP, no sample route |
+| SECURITY-10 | PASS | no new dependency; BOM-pinned versions unchanged |
+| SECURITY-11 | PASS | bounded token bucket with Retry-After, tested at the boundary |
+| SECURITY-12 | PASS | runtime-injected key with no default and no key in any message |
+| SECURITY-14 | PASS | sanitized status-only health; all other endpoints unavailable |
+| SECURITY-15 | PASS | fail-closed limiter for mutations and one safe response per failure |
+| SECURITY-02, SECURITY-06, SECURITY-13 | PASS (unchanged) | persistence, identity-free local scope and append-only audit are unaffected |
+
+**Blocking findings**: none. All carried obligations from the Step 10 review are now closed.

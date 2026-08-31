@@ -122,20 +122,20 @@ code-change batch ends with the mandatory security checklist appended to
 
 ### Step 11 - Security Platform Tests First
 
-- [ ] Create failing MockMvc/configuration tests for request ID/MDC cleanup, loopback CORS, explicit public
+- [x] Create failing MockMvc/configuration tests for request ID/MDC cleanup, loopback CORS, explicit public
   routes, unmatched denial, headers, body/media limit, bounded rate limit, safe failure and health exposure.
-- [ ] Add datasource-profile tests for isolated memory DB, missing file key rejection, AES file startup and
+- [x] Add datasource-profile tests for isolated memory DB, missing file key rejection, AES file startup and
   H2 console/TCP disablement.
-- [ ] Confirm failing state before platform implementation.
+- [x] Confirm failing state before platform implementation.
 - **Traceability**: NFR-003, NFR-008; SECURITY-01, SECURITY-03~05, SECURITY-07~12, SECURITY-14, SECURITY-15.
 
 ### Step 12 - Security, Configuration and Observability Platform
 
-- [ ] Implement ordered filters, Spring Security config, bounded token bucket, request correlation, structured
+- [x] Implement ordered filters, Spring Security config, bounded token bucket, request correlation, structured
   redacted logging and constrained Actuator under `backend/src/main/java/com/timetable/todo/platform/`.
-- [ ] Create `application.yml`, `application-test.yml` and `application-file.yml` with loopback, Flyway,
+- [x] Create `application.yml`, `application-test.yml` and `application-file.yml` with loopback, Flyway,
   validate-only ORM and encrypted-file fail-fast settings; never include a usable secret.
-- [ ] Make Step 11 tests pass, refactor, run all SECURITY-01~15 checklist items and mark Steps 11~12.
+- [x] Make Step 11 tests pass, refactor, run all SECURITY-01~15 checklist items and mark Steps 11~12.
 - **Traceability**: NFR-003, NFR-006, NFR-008; SECURITY-01~15.
 
 ### Step 13 - Capacity, Coverage and Contract Gates

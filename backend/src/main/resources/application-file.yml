@@ -1,0 +1,14 @@
+# FR-012, SECURITY-01, SECURITY-12: Encrypted local development database.
+#
+# The composite value is "<file-encryption-key> <user-password>" and MUST be injected at runtime, for
+# example: PLANNING_DB_PASSWORD='<file-key> <user-password>' ./mvnw spring-boot:run -Dspring-boot.run.profiles=file
+# There is no default. FileDatasourceValidator fails startup when the key is absent or the URL is not
+# an encrypted local file, and the H2 console and TCP server are never enabled.
+spring:
+  datasource:
+    url: jdbc:h2:file:./data/planning;CIPHER=AES;DB_CLOSE_ON_EXIT=FALSE
+    username: planning
+    password: ${PLANNING_DB_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: validate

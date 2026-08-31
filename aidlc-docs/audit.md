@@ -893,3 +893,24 @@
 
 ---
 
+## U1 Code Generation Steps 11~12 — 보안 플랫폼 완료
+
+- **[타임스탬프]**: 2026-08-31 21:25:00 (KST)
+- **[사용자 지시 원문]**:
+  > (새 사용자 입력 없음 — 승인된 코드 생성 계획 Steps 11~12 실행)
+- **[AI 제안 요약]**: Step 11에서 전체 필터 체인을 켠 상태의 실패 테스트 22개를 먼저 작성하고
+  (요청 ID 허용목록·MDC 정리, 보안 헤더, HSTS 부재, loopback CORS 허용/거부, 미선언 경로 거부,
+  본문 크기 제한 413, rate limit 429, health 전용 노출, H2 콘솔 부재, 파일 데이터소스 가드),
+  Step 12에서 `com.timetable.todo.platform` 아래 순서가 고정된 필터 3종, Spring Security 설정,
+  경계 토큰 버킷, 안전 오류 작성기와 파일 프로필 가드를 구현했다. 테스트 설정이 운영
+  `application.yml`을 가리는 문제를 발견해 `application-test.yml`로 분리하고 surefire에서 test
+  프로필을 활성화해 테스트가 실제 플랫폼 설정을 검증하도록 바로잡았다.
+- **[사용자 판단·승인 근거]**: 사용자는 승인된 설계 범위의 코드·테스트 실행을 위임했고, Steps 11~12는
+  이미 승인된 코드 생성 계획과 NFR design의 ordered HTTP boundary를 그대로 구현한 것이므로 새로운
+  설계 결정이 필요하지 않았다.
+- **[최종 결정]**: Steps 11~12를 완료한다. `./mvnw verify` exit 0, 122개 테스트 전부 통과.
+  보안 리뷰 PASS이며 Step 10에서 이월했던 SECURITY-08 경로 명시, 본문 크기 제한, CORS, 보안 헤더,
+  rate limit 의무를 모두 종결했다. 다음은 Step 13 품질 게이트다.
+
+---
+

@@ -107,6 +107,14 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
       </plugin>
       <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <systemPropertyVariables>
+            <spring.profiles.active>test</spring.profiles.active>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+      <plugin>
         <artifactId>maven-resources-plugin</artifactId>
         <executions>
           <execution>
