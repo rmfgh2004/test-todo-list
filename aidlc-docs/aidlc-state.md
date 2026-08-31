@@ -3,7 +3,7 @@
 ## Project Information
 - **Project Type**: Greenfield
 - **Start Date**: 2026-08-30T14:54:39+09:00
-- **Current Stage**: CONSTRUCTION - U1 Backend Planning Core - Code Generation Part 2 Step 13
+- **Current Stage**: CONSTRUCTION - U1 Backend Planning Core - U1 Backend Planning Core - Code Generation complete, awaiting the U1 approval gate
 
 ## Workspace State
 - **Existing Code**: No
@@ -33,7 +33,7 @@
 - [ ] NFR Requirements per Unit - EXECUTE (U1 complete; U2 pending)
 - [ ] NFR Design per Unit - EXECUTE (U1 complete; U2 pending)
 - [x] Infrastructure Design - SKIP (local-only, no infrastructure services)
-- [ ] Code Generation per Unit - EXECUTE (U1 Steps 1~12 complete; Steps 13~14 gates and docs next; U2 pending)
+- [ ] Code Generation per Unit - EXECUTE (U1 Steps 1~14 complete and awaiting the approval gate; U2 pending)
 - [ ] Build and Test - EXECUTE
 
 ## Extension Configuration
@@ -44,12 +44,13 @@
 | Property-Based Testing | Yes | Partial: PBT-02, PBT-03, PBT-07, PBT-08, PBT-09 | Requirements Analysis |
 
 ## Current Blocker
-None. Steps 1~10 are complete and `./mvnw verify` passes with 100 tests, the OpenAPI route-drift check and
-the format gate. Two design questions were resolved with the user during Step 9~10: PATCH replaces the full
-task content set, and a changed estimate resizes an existing placement in place under the FR-007 conflict
-rules. Steps 11~12 add the ordered security platform (request ID, CORS, headers, body limit, rate limit,
-explicit route allowlist and encrypted file profile), which also completes the SECURITY-08 obligation
-carried from the Step 10 review.
+None. U1 code generation Steps 1~14 are complete. `./mvnw verify` exits 0 with 147 tests, 1,400 property
+checks, the architecture rule, the OpenAPI drift check, 80% line/branch and 90% collision-branch coverage
+gates and the format gate. Gated suites pass on demand: `-Pcapacity` and `-Prestore`. Every applicable
+Security Baseline entry is PASS with no blocking finding. Two design questions were resolved with the user
+during Steps 9~10 and recorded in audit.md: PATCH replaces the full task content set, and a changed estimate
+resizes an existing placement in place under the FR-007 conflict rules. The next action is the U1 Code
+Generation approval gate; U2 (React + Vite frontend) starts only after that approval.
 
 ## Execution Plan Summary
 - **Execution Units**: 2 (Backend Planning Core, Frontend Planning Experience)

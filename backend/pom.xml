@@ -27,6 +27,8 @@
     <jqwik.version>1.9.3</jqwik.version>
     <spotless.version>3.9.0</spotless.version>
     <swagger-ui.version>5.29.4</swagger-ui.version>
+    <!-- NFR-001: expensive capacity and restore fixtures run behind their own profiles. -->
+    <test.excluded.groups>capacity,restore</test.excluded.groups>
   </properties>
 
   <dependencies>
@@ -109,6 +111,7 @@
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
+          <excludedGroups>${test.excluded.groups}</excludedGroups>
           <systemPropertyVariables>
             <spring.profiles.active>test</spring.profiles.active>
           </systemPropertyVariables>
@@ -154,6 +157,45 @@
             </goals>
             <phase>verify</phase>
           </execution>
+          <execution>
+            <id>coverage-gate</id>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <phase>verify</phase>
+            <configuration>
+              <rules>
+                <rule>
+                  <element>BUNDLE</element>
+                  <limits>
+                    <limit>
+                      <counter>LINE</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>0.80</minimum>
+                    </limit>
+                    <limit>
+                      <counter>BRANCH</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>0.80</minimum>
+                    </limit>
+                  </limits>
+                </rule>
+                <rule>
+                  <element>CLASS</element>
+                  <includes>
+                    <include>com.timetable.todo.planning.domain.SchedulePolicy</include>
+                  </includes>
+                  <limits>
+                    <limit>
+                      <counter>BRANCH</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>0.90</minimum>
+                    </limit>
+                  </limits>
+                </rule>
+              </rules>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
       <plugin>
@@ -189,6 +231,18 @@
   </build>
 
   <profiles>
+    <profile>
+      <id>capacity</id>
+      <properties>
+        <test.excluded.groups>restore</test.excluded.groups>
+      </properties>
+    </profile>
+    <profile>
+      <id>restore</id>
+      <properties>
+        <test.excluded.groups>capacity</test.excluded.groups>
+      </properties>
+    </profile>
     <profile>
       <id>security-scan</id>
       <build>

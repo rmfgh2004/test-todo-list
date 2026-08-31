@@ -140,21 +140,21 @@ code-change batch ends with the mandatory security checklist appended to
 
 ### Step 13 - Capacity, Coverage and Contract Gates
 
-- [ ] Add deterministic 1,000-task p95 fixture, 10,000-task capacity fixture, readiness smoke, encrypted DB
+- [x] Add deterministic 1,000-task p95 fixture, 10,000-task capacity fixture, readiness smoke, encrypted DB
   backup/restore smoke and OpenAPI drift checks under backend test/tool paths.
-- [ ] Configure JaCoCo 80% line/branch overall and 90% collision-domain branch gates.
-- [ ] Run standard `./mvnw verify`; run/document separately gated performance, restore, dependency scan and
+- [x] Configure JaCoCo 80% line/branch overall and 90% collision-domain branch gates.
+- [x] Run standard `./mvnw verify`; run/document separately gated performance, restore, dependency scan and
   SBOM commands where environment/runtime makes them unsuitable for every unit-test loop.
-- [ ] Resolve all failures without lowering thresholds; run the security review and mark Step 13.
+- [x] Resolve all failures without lowering thresholds; run the security review and mark Step 13.
 - **Traceability**: NFR-001~NFR-008; SECURITY-01, SECURITY-03, SECURITY-09, SECURITY-10, SECURITY-15.
 
 ### Step 14 - Backend Documentation and U1 Evidence
 
-- [ ] Create `backend/README.md` covering memory/file startup, required secret injection, local URL, API,
+- [x] Create `backend/README.md` covering memory/file startup, required secret injection, local URL, API,
   migration, backup/restore and verification commands without real secret examples.
-- [ ] Create/update `aidlc-docs/construction/u1-backend-planning-core/code/code-summary.md`,
+- [x] Create/update `aidlc-docs/construction/u1-backend-planning-core/code/code-summary.md`,
   `test-summary.md`, `security-review.md` and traceability evidence.
-- [ ] Verify no secrets/H2 files, duplicate classes, unbounded API/query, unchecked plan item or applicable
+- [x] Verify no secrets/H2 files, duplicate classes, unbounded API/query, unchecked plan item or applicable
   security failure remains; mark all implemented stories and Step 14.
 - **Traceability**: FR-001~FR-013; NFR-001~NFR-008; SECURITY-01~15; selected PBT obligations.
 
@@ -177,3 +177,9 @@ code-change batch ends with the mandatory security checklist appended to
 
 All 14 steps, story contributions, applicable Security Baseline entries and selected PBT obligations must be
 complete. Generated code then receives the standardized Code Generation review gate before U2 begins.
+
+**Status**: all 14 steps are complete. `./mvnw verify` exits 0 with 147 tests, 1,400 property checks, the
+architecture rule, the OpenAPI drift check, 80% line/branch and 90% collision-branch coverage gates and the
+format gate. Gated suites pass on demand: `-Pcapacity` (3 tests) and `-Prestore` (3 tests). Every applicable
+Security Baseline entry is PASS with no blocking finding and no carried obligation. Awaiting the U1
+completion approval gate.

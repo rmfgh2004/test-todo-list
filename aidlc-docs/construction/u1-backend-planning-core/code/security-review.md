@@ -505,3 +505,58 @@ CORS, security headers and rate limiting must be completed in Steps 11~12 before
 | SECURITY-02, SECURITY-06, SECURITY-13 | PASS (unchanged) | persistence, identity-free local scope and append-only audit are unaffected |
 
 **Blocking findings**: none. All carried obligations from the Step 10 review are now closed.
+
+## 2026-08-31T22:05:00+09:00 - Steps 13~14 Quality Gates and U1 Documentation
+
+- **Changed files**: `backend/pom.xml` (JaCoCo gate, tag exclusion, capacity/restore profiles),
+  `SchedulePolicyEdgeCaseTest`, `TaskContentEdgeCaseTest`, `PlatformPropertiesTest`,
+  `TokenBucketRateLimiterTest`, `ApiErrorHandlerFailureTest`, `CapacityAndLatencyTest`,
+  `EncryptedFileRestoreTest`, `backend/README.md`, `code-summary.md`, `test-summary.md`,
+  `traceability.md`.
+- **Stable IDs**: FR-001~FR-013; NFR-001~NFR-008; SECURITY-01, SECURITY-03, SECURITY-09,
+  SECURITY-10, SECURITY-12, SECURITY-15; PBT-02, PBT-03, PBT-07, PBT-08, PBT-09.
+- **Result**: PASS.
+- **Automated evidence**: `./mvnw verify` exits 0 with 147 tests and "All coverage checks have been
+  met". `./mvnw -Pcapacity test` passes 3 fixtures; `./mvnw -Prestore test` passes 3 fixtures.
+
+### Checklist Result
+
+- [x] Coverage gates were met by adding the missing boundary tests, never by lowering a threshold.
+  Branch coverage rose from 77% to 88% and `SchedulePolicy` branch coverage from 77% to 93% against
+  its 90% gate.
+- [x] `ApiErrorHandlerFailureTest` proves an unexpected failure carrying a JDBC URL, a filesystem path
+  and the word "secret" is reduced to `INTERNAL_ERROR` plus a request ID. (SECURITY-15)
+- [x] `EncryptedFileRestoreTest` reads the raw database file and asserts the task title does not appear
+  in clear text, so encryption is demonstrated rather than assumed. (SECURITY-01)
+- [x] The restore fixture passes the key as a command-line argument scoped to that boot only; the key
+  is a synthetic test value and appears in no configuration file or log. (SECURITY-12)
+- [x] `README.md` documents the required runtime secret by variable name and format only. It contains
+  no real or example-usable key, and it states the conditions that must be met before this service is
+  ever exposed beyond loopback.
+- [x] Capacity fixtures use synthetic titles and no personal data; they are excluded from the ordinary
+  loop by tag so they cannot silently slow or destabilize the standard gate.
+- [x] The dependency scan remains the explicitly gated `security-scan` profile and the CycloneDX SBOM
+  still generates during `verify`. (SECURITY-10)
+- [x] No secret, database file, trace file or `.env` is tracked; a repository scan confirmed it.
+- [x] No new runtime dependency, endpoint, datasource or log statement was introduced in this batch.
+
+### Security Baseline Status
+
+| Rules | Status for this change | Evidence |
+|---|---|---|
+| SECURITY-01 | PASS | clear-text absence verified against the real encrypted file |
+| SECURITY-03 | PASS | sanitized unexpected-failure response proven by test |
+| SECURITY-09 | PASS | no new surface; gated fixtures do not run in the standard loop |
+| SECURITY-10 | PASS | SBOM generated, scan profile retained, no dependency added |
+| SECURITY-12 | PASS | test-scoped synthetic key only, documentation names the variable not a value |
+| SECURITY-15 | PASS | coverage gate and failure-path tests enforce the safe boundary |
+| SECURITY-02, SECURITY-04~08, SECURITY-11, SECURITY-13, SECURITY-14 | PASS (unchanged) | boundaries established in Steps 8~12 remain covered and tested |
+
+**Blocking findings**: none.
+
+## U1 Completion Statement
+
+All 14 code generation steps are complete. Every applicable Security Baseline entry (SECURITY-01~15)
+is PASS across the batch history with no blocking finding and no carried obligation. The selected
+property-based testing obligations (PBT-02, PBT-03, PBT-07, PBT-08, PBT-09) are implemented and run in
+the standard gate.
