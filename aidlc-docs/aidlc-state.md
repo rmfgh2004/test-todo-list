@@ -3,7 +3,7 @@
 ## Project Information
 - **Project Type**: Greenfield
 - **Start Date**: 2026-08-30T14:54:39+09:00
-- **Current Stage**: CONSTRUCTION - U1 Backend Planning Core - U1 Backend Planning Core - Code Generation complete, awaiting the U1 approval gate
+- **Current Stage**: CONSTRUCTION - U2 Frontend Planning Experience - Code Generation Part 2 (Steps 1~2 of 14 complete; resume at Step 3)
 
 ## Workspace State
 - **Existing Code**: No
@@ -29,11 +29,11 @@
 - [x] Units Generation
 
 ### CONSTRUCTION PHASE
-- [ ] Functional Design per Unit - EXECUTE (U1 complete and approved; U2 in progress)
-- [ ] NFR Requirements per Unit - EXECUTE (U1 complete and approved; U2 pending)
-- [ ] NFR Design per Unit - EXECUTE (U1 complete and approved; U2 pending)
+- [x] Functional Design per Unit - EXECUTE (U1 and U2 complete and approved)
+- [x] NFR Requirements per Unit - EXECUTE (U1 and U2 complete and approved)
+- [x] NFR Design per Unit - EXECUTE (U1 and U2 complete and approved)
 - [x] Infrastructure Design - SKIP (local-only, no infrastructure services)
-- [ ] Code Generation per Unit - EXECUTE (U1 complete and approved; U2 pending)
+- [ ] Code Generation per Unit - EXECUTE (U1 complete and approved; U2 Part 1 plan awaiting approval)
 - [ ] Build and Test - EXECUTE
 
 ## Extension Configuration
@@ -44,24 +44,26 @@
 | Property-Based Testing | Yes | Partial: PBT-02, PBT-03, PBT-07, PBT-08, PBT-09 | Requirements Analysis |
 
 ## Current Blocker
-None. U1 code generation Steps 1~14 are complete. `./mvnw verify` exits 0 with 147 tests, 1,400 property
-checks, the architecture rule, the OpenAPI drift check, 80% line/branch and 90% collision-branch coverage
-gates and the format gate. Gated suites pass on demand: `-Pcapacity` and `-Prestore`. Every applicable
-Security Baseline entry is PASS with no blocking finding. Two design questions were resolved with the user
-during Steps 9~10 and recorded in audit.md: PATCH replaces the full task content set, and a changed estimate
-resizes an existing placement in place under the FR-007 conflict rules. The next action is the U1 Code
-Generation approval gate; U2 (React + Vite frontend) starts only after that approval.
+None. Steps 1~2 of the approved 14-step plan are complete and `npm run verify` passes end to end.
+Step 1 created `frontend/` with pinned dependencies, import-boundary and injection lint rules, a
+blocking coverage gate and a 250KB gzip bundle gate. Step 2 closed the carried U1 contract defect:
+`planning-api.yaml` now documents 429, `RATE_LIMITED` and a required `Retry-After` header on all nine
+operations, `OpenApiContractDriftTest` gained three response-level assertions (negative-tested), and
+the generated contract types plus a regeneration diff gate are in place. Resume at Step 3 (pure time
+and grid core with fast-check). Handoff notes:
+`aidlc-docs/construction/u2-frontend-planning-experience/code/handoff.md`.
+Nothing from this session is committed yet.
 
 ## Execution Plan Summary
 - **Execution Units**: 2 (Backend Planning Core, Frontend Planning Experience)
 - **Execute**: Application Design, Units Generation, Functional Design, NFR Requirements,
   NFR Design, Code Generation, Build and Test
 - **Skip**: Reverse Engineering, Infrastructure Design, Operations
-- **Next Stage After Approval**: U1 Steps 11~14, then the U1 completion gate before U2
+- **Next Stage After Approval**: U2 Code Generation Part 2 (implementation), then Build and Test
 
 ## Repository
 - **Remote**: https://github.com/rmfgh2004/test-todo-list.git
-- **Remote State**: `origin/main` at REST adapter checkpoint (Steps 9~10)
+- **Remote State**: `origin/main` at the U1 approval commit (2cd6c4a); all U2 design artifacts are local only
 
 ## Design Inputs
 - **Location**: aidlc-inputs/design/

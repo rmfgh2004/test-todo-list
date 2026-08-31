@@ -43,6 +43,8 @@ paths:
                 $ref: '#/components/schemas/WeeklyPlanView'
         '400':
           $ref: '#/components/responses/BadRequest'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
 
   /api/v1/tasks:
     get:
@@ -102,6 +104,8 @@ paths:
                 $ref: '#/components/schemas/TaskPageView'
         '400':
           $ref: '#/components/responses/BadRequest'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
     post:
       tags: [tasks]
       summary: Create a task in the unscheduled backlog
@@ -129,6 +133,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '415':
           $ref: '#/components/responses/UnsupportedMediaType'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
 
   /api/v1/tasks/{id}:
     get:
@@ -149,6 +155,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '404':
           $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
     patch:
       tags: [tasks]
       summary: Replace the full task content set
@@ -181,6 +189,8 @@ paths:
           $ref: '#/components/responses/Conflict'
         '415':
           $ref: '#/components/responses/UnsupportedMediaType'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
     delete:
       tags: [tasks]
       summary: Delete a task after explicit confirmation
@@ -209,6 +219,8 @@ paths:
           $ref: '#/components/responses/NotFound'
         '409':
           $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
 
   /api/v1/tasks/{id}/schedule:
     put:
@@ -242,6 +254,8 @@ paths:
           $ref: '#/components/responses/Conflict'
         '415':
           $ref: '#/components/responses/UnsupportedMediaType'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
     delete:
       tags: [tasks]
       summary: Remove the placement and keep all content
@@ -269,6 +283,8 @@ paths:
           $ref: '#/components/responses/NotFound'
         '409':
           $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
 
   /api/v1/tasks/{id}/completion:
     put:
@@ -299,6 +315,8 @@ paths:
           $ref: '#/components/responses/Conflict'
         '415':
           $ref: '#/components/responses/UnsupportedMediaType'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
 
 components:
   parameters:
@@ -331,6 +349,24 @@ components:
             $ref: '#/components/schemas/ApiError'
     UnsupportedMediaType:
       description: The request media type is not supported
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    TooManyRequests:
+      description: >-
+        NFR-003. The per-client token bucket rejected the request before it reached any handler;
+        nothing was read or stored. Applies to every operation because the rate limiter runs as a
+        servlet filter ahead of routing. The client must wait for the indicated delay before
+        retrying, and must never retry automatically.
+      headers:
+        Retry-After:
+          description: Whole seconds the client must wait before retrying
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
       content:
         application/json:
           schema:
@@ -571,6 +607,7 @@ components:
             - UNSUPPORTED_MEDIA_TYPE
             - SCHEDULE_CONFLICT
             - STALE_TASK
+            - RATE_LIMITED
             - INTERNAL_ERROR
         message:
           type: string
