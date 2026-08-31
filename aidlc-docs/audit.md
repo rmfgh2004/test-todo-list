@@ -533,3 +533,173 @@
 - **[최종 결정]**: U1 Functional Design을 완료 처리한다. 비밀값과 대용량 파일이 없고 문서·규칙 검증이 통과했음을 확인했다. H2 DB 파일 ignore를 보강한 뒤 초기 커밋을 `origin/main`에 push하고 U1 NFR Requirements로 진행한다.
 
 ---
+
+## Git Baseline — 코드 작성 전 초기 push 완료
+
+- **[타임스탬프]**: 2026-08-31T17:52:28+09:00
+- **[사용자 지시 원문]**:
+  > (직전 사용자 push 지시 실행 결과 — 새 사용자 입력 없음)
+- **[AI 제안 요약]**: `.gitignore`에 H2 `*.mv.db`, `*.trace.db`, local data 경로를 추가하고 비밀값·10MB 초과 파일·whitespace·규칙 동기화를 검사했다. AI-DLC 규칙, 입력, 디자인 레퍼런스와 계획·설계를 Conventional Commit으로 저장하고 origin/main에 push했다.
+- **[사용자 판단·승인 근거]**: 사용자는 실제 코드 작업 전에 원격 기준점을 만들도록 명시했다.
+- **[최종 결정]**: commit `19f1467` (`docs(aidlc): establish pre-code planning baseline`)을 생성해 `origin/main`에 push했다. 로컬 main과 origin/main이 동일한 commit을 가리킴을 확인하고 U1 NFR Requirements로 진행한다.
+
+---
+
+## U1 NFR Requirements — 기본 A 결정 및 생성 시작
+
+- **[타임스탬프]**: 2026-08-31T17:52:28+09:00
+- **[사용자 지시 원문]**:
+  > (사용자의 향후 비예외적 A 기본 적용 지시에 따른 단계 실행 — 새 사용자 입력 없음)
+- **[AI 제안 요약]**: 단일 로컬 사용자와 10,000 task 용량, 1,000건 p95 300ms, 프로세스 실행 중 신뢰성과 파일 백업 복구, 전체 Security Baseline, Spring Boot 4.1.1/Java 17/Maven/H2/Flyway, transaction·health·구조화 로그·80% 커버리지와 frontend가 소비할 안전한 OpenAPI를 U1 NFR 권장안 A로 선택한다.
+- **[사용자 판단·승인 근거]**: 승인된 MVP 범위와 기존 tech stack을 수치화하는 일반 결정이며 범위 확대나 새로운 외부 시스템이 없어 사용자의 기본 A 위임을 적용한다.
+- **[최종 결정]**: 8개 NFR 범주의 A 답변을 기록하고 두 필수 산출물을 생성한다.
+
+---
+
+## U1 NFR Requirements — 산출물 완료 및 승인 요청
+
+- **[타임스탬프]**: 2026-08-31T18:09:03+09:00
+- **[사용자 지시 원문]**:
+  > (새 사용자 입력 없음 — U1 NFR Requirements 완료 보고 및 승인 요청)
+- **[AI 제안 요약]**: 기존 NFR-001~008을 유지하면서 단일 로컬 사용자 10,000 task 용량, 1,000건 p95 300ms, 시작 health 5초, transaction·optimistic lock·암호화 백업, API 한도와 안전한 오류 계약을 U1 측정 기준으로 구체화했다. Java 17, Spring Boot 4.1.1, Maven, H2 2.4.240, Flyway와 테스트·보안·관측 도구 결정을 기록했다. SECURITY-01~15 전체의 적용/N/A 근거와 PBT-02/03/07/08/09 실행 조건을 검증했다.
+- **[사용자 판단·승인 근거]**: 생성된 U1 NFR Requirements 산출물에 대한 사후 검토와 승인을 기다리는 중이다.
+- **[최종 결정]**: 두 필수 산출물과 계획 체크박스가 완료됐고 안정 ID, Security/PBT, whitespace와 AI-DLC 규칙 동기화 검사를 통과했다. 차단 결함은 없다. 승인 전까지 U1 NFR Requirements를 미완료로 유지한다.
+
+---
+
+## U1 NFR Requirements — 단계 완료 전 audit 누락 점검
+
+- **[타임스탬프]**: 2026-08-31T18:09:03+09:00
+- **[사용자 지시 원문]**:
+  > (사용자 입력 없음 — 단계 완료 전 자체 점검)
+- **[AI 제안 요약]**: U1 Functional Design 승인, 코드 전 Git push, NFR 기본 A 결정, 두 산출물 생성과 검증 기록의 5개 필드 및 사용자 원문 보존 여부를 점검했다.
+- **[사용자 판단·승인 근거]**: 자체 점검 항목으로 사용자 판단이 필요하지 않다.
+- **[최종 결정]**: 현재 단계 관련 감사 기록에 누락이 없다. U1 NFR 산출물의 명시적 승인 응답을 기다린다.
+
+---
+
+## U1 NFR Requirements — 승인 및 다음 단계 진행
+
+- **[타임스탬프]**: 2026-08-31T18:13:02+09:00
+- **[사용자 지시 원문]**:
+  > 다음 단계 진행해줘
+- **[AI 제안 요약]**: 로컬 단일 사용자 환경에 맞는 수치화된 성능 목표와 Security/PBT 차단 기준이 모두 추적되며 불필요한 클라우드 복잡성을 제외했다는 근거로 U1 NFR Requirements를 승인하고 U1 NFR Design으로 진행하는 안이다.
+- **[사용자 판단·승인 근거]**: 사용자는 완료 보고 직후 다음 단계 진행을 명시했다. 직전 제시된 A 근거를 거부하거나 변경하지 않았으므로 해당 근거로 산출물을 승인한 것으로 기록한다.
+- **[최종 결정]**: U1 NFR Requirements를 완료 처리하고 U1 NFR Design을 시작한다.
+
+---
+
+## U1 NFR Design — 기본 A 결정 및 생성 시작
+
+- **[타임스탬프]**: 2026-08-31T18:13:02+09:00
+- **[사용자 지시 원문]**:
+  > (사용자의 향후 비예외적 A 기본 적용 지시에 따른 단계 실행 — 새 사용자 입력 없음)
+- **[AI 제안 요약]**: 신뢰성은 atomic transaction·optimistic lock·fail-fast와 명시적 재시도로, 성능은 bounded indexed query·projection과 무캐시 기준선으로, 보안은 순서가 고정된 servlet filter·safe DTO/error·encrypted H2 profile로 설계한다. queue, broker, circuit breaker, distributed cache 같은 원격·분산 구성은 적용하지 않는다.
+- **[사용자 판단·승인 근거]**: 승인된 단일 로컬 사용자·10,000 task 범위를 구조화하는 일반 설계이고 외부 시스템이나 위험한 자동 복구를 추가하지 않으므로 사용자의 기본 A 위임을 적용한다.
+- **[최종 결정]**: 5개 필수 질문 범주의 A 답변과 N/A 근거를 계획에 기록하고 두 NFR Design 산출물을 생성한다.
+
+---
+
+## U1 NFR Design — 산출물 완료 및 승인 요청
+
+- **[타임스탬프]**: 2026-08-31T18:17:38+09:00
+- **[사용자 지시 원문]**:
+  > (새 사용자 입력 없음 — U1 NFR Design 완료 보고 및 승인 요청)
+- **[AI 제안 요약]**: atomic command transaction, optimistic concurrency와 explicit retry, fail-fast typed error, bounded indexed query·projection·무캐시 기준선, 순서가 고정된 HTTP security chain, encrypted H2 file profile, 구조화 redacted logging과 제한된 health 패턴을 설계했다. 이를 B-N01~B-N07 논리 컴포넌트, 런타임 상호작용, 설정 경계, 의존성 규칙과 검증 매트릭스에 매핑했다. 원격·분산 의존성이 없어 circuit breaker, queue, broker, distributed cache와 별도 Infrastructure Design은 N/A로 유지했다.
+- **[사용자 판단·승인 근거]**: 생성된 U1 NFR Design 산출물에 대한 사후 검토와 승인을 기다리는 중이다.
+- **[최종 결정]**: 두 필수 산출물과 계획 체크박스가 완료됐고 NFR 8개, SECURITY 15개, 선택 PBT 5개와 B-N01~07 추적성, whitespace, 규칙 동기화 검사를 통과했다. 차단 결함은 없다. 승인 전까지 U1 NFR Design을 미완료로 유지한다.
+
+---
+
+## U1 NFR Design — 단계 완료 전 audit 누락 점검
+
+- **[타임스탬프]**: 2026-08-31T18:17:38+09:00
+- **[사용자 지시 원문]**:
+  > (사용자 입력 없음 — 단계 완료 전 자체 점검)
+- **[AI 제안 요약]**: NFR Requirements 승인 원문, 기본 A 설계 결정, 필수 산출물 생성과 추적성 검증 기록의 필수 5개 필드를 점검했다.
+- **[사용자 판단·승인 근거]**: 자체 점검 항목으로 사용자 판단이 필요하지 않다.
+- **[최종 결정]**: 현재 단계 감사 기록에 누락이 없다. U1 NFR Design의 명시적 승인 응답을 기다린다.
+
+---
+
+## U1 NFR Design — 승인 및 실제 개발 시점 문의
+
+- **[타임스탬프]**: 2026-08-31T18:19:59+09:00
+- **[사용자 지시 원문]**:
+  > 진행해줘 그리고 실제 개발은 언제하는거야?
+- **[AI 제안 요약]**: NFR 8개, Security 15개, 선택 PBT 5개가 패턴·컴포넌트와 자동 검증에 연결됐다는 근거로 U1 NFR Design을 승인한다. 현재가 실제 코드 직전의 Code Generation Part 1이며, 계획 승인 직후 Part 2에서 `backend/` Spring Boot 코드와 테스트 생성을 시작한다고 설명한다.
+- **[사용자 판단·승인 근거]**: 사용자는 진행을 명시했고 직전 설계의 변경을 요청하지 않았다. 기존 기본 A 위임과 제시된 추적성·범위 적합성 근거로 U1 NFR Design을 승인한 것으로 기록한다.
+- **[최종 결정]**: U1 NFR Design을 완료 처리하고 Code Generation Part 1 계획을 생성한다. 아직 `backend/` 코드 파일은 없으며 계획의 명시적 승인 후 실제 생성을 시작한다.
+
+---
+
+## U1 Code Generation Part 1 — 계획 완료 및 승인 요청
+
+- **[타임스탬프]**: 2026-08-31T18:19:59+09:00
+- **[사용자 지시 원문]**:
+  > (새 사용자 입력 없음 — U1 Code Generation 계획 완료 보고 및 승인 요청)
+- **[AI 제안 요약]**: `backend/` Spring Boot scaffold부터 domain/application/persistence/REST/security를 테스트 우선으로 구현하고, jqwik·ArchUnit·OpenAPI·성능·coverage·암호화 복구·공급망과 코드 묶음별 보안 검토까지 수행하는 14단계 계획을 작성했다. FR-001~013, NFR-001~008, SECURITY-01~15, 선택 PBT와 US-001~010의 U1 기여를 단계별로 매핑했다.
+- **[사용자 판단·승인 근거]**: 전체 생성 순서와 범위에 대한 명시적 승인을 기다리는 중이다.
+- **[최종 결정]**: 코드 생성 계획은 단일 실행 원천으로 완성됐고 승인 전에는 Part 2 및 `backend/` 파일 생성을 시작하지 않는다. 승인되면 Step 1부터 실제 코드를 생성한다.
+
+---
+
+## U1 Code Generation Part 1 — 계획 승인 및 실제 개발 시작
+
+- **[타임스탬프]**: 2026-08-31T18:22:45+09:00
+- **[사용자 지시 원문]**:
+  > A
+- **[AI 제안 요약]**: 14단계 TDD 코드 생성 계획 전체를 승인하고 Step 1부터 `backend/` Spring Boot scaffold와 테스트를 실제 생성하는 안이다.
+- **[사용자 판단·승인 근거]**: 사용자는 직전 계획 승인 요청에 A로 명시 응답했다. 계획은 FR/NFR/Security/PBT와 모든 U1 스토리 기여를 단계별로 추적하며 코드 묶음별 보안 검토를 포함한다.
+- **[최종 결정]**: U1 Code Generation Part 1을 승인 처리하고 Part 2 실제 구현을 시작한다. Java 17 환경을 확인했고 Maven Wrapper, Spring Boot 진입점과 smoke test 생성을 시작했다.
+
+---
+
+## U1 Code Generation — Codex 권한 승격 요청
+
+- **[타임스탬프]**: 2026-08-31T18:30:23+09:00
+- **[사용자 지시 원문]**:
+  > codex --yolo --search --enable collab 를 진행해서 모든 권한을 허용해줘
+- **[AI 제안 요약]**: 실행 중인 Codex 세션은 내부 명령으로 권한을 승격할 수 없으며 중첩 세션은 동일 작업공간의 상태·파일 충돌을 유발할 수 있어 실행하지 않는다고 설명했다. 현재 CLI에는 `--yolo` 별칭이 없고 대응하는 위험 옵션은 `--dangerously-bypass-approvals-and-sandbox`이며, `--search`와 `--enable collab`은 새 세션 시작 옵션임을 로컬 도움말로 확인했다.
+- **[사용자 판단·승인 근거]**: 사용자는 반복 승인 없이 모든 권한으로 개발을 계속하려는 의도를 명시했다. 다만 현재 세션의 권한과 개발자 정책은 사용자 명령으로 변경할 수 없다.
+- **[최종 결정]**: 중첩 Codex나 위험한 sandbox 우회 세션을 실행하지 않는다. 현재 승인된 세션에서 검색과 필요한 명령별 승인 절차를 사용해 기존 U1 개발을 계속한다.
+
+---
+
+## U1 Code Generation — 코드·Git·터미널 실행 위임
+
+- **[타임스탬프]**: 2026-08-31T18:31:20+09:00
+- **[사용자 지시 원문]**:
+  > 그러면 설계는 내게 질문을 하되
+  > 코드작성, 깃 관련 터미널 관련 명령어는 그냥 허용해줘
+- **[AI 제안 요약]**: 설계 단계의 질문·승인 게이트는 유지하고, 승인된 설계 범위의 코드 작성, 테스트, 비파괴 Git과 터미널 명령은 추가 확인 없이 실행한다. 다만 플랫폼이 네트워크·권한 또는 외부 쓰기에 시스템 승인을 강제하면 이를 내부에서 우회할 수 없으며 재사용 가능한 명령 prefix로 반복을 최소화한다고 설명했다.
+- **[사용자 판단·승인 근거]**: 사용자는 설계 의사결정은 직접 검토하되 구현·검증·버전 관리의 반복 실행은 에이전트에 위임해 개발 속도를 높이려 했다.
+- **[최종 결정]**: 이후 설계 변경은 사용자에게 질문하고, 확정 설계 내 코드·테스트·비파괴 Git/터미널 작업은 자동 진행한다. 시스템 승인 경계와 파괴적·범위 확대 작업은 예외로 유지한다.
+
+---
+
+## U1 Code Generation — 주기적 Git push 전략 요청
+
+- **[타임스탬프]**: 2026-08-31T18:55:49+09:00
+- **[사용자 지시 원문]**:
+  > 근데 얘는 주기적으로 깃에 푸시 안해? 언제하는거야? 너가 좋은 전략대로 해줘
+- **[AI 제안 요약]**: 깨진 WIP를 원격에 남기지 않고 테스트·보안 리뷰가 통과한 논리 계층 단위로 checkpoint commit/push하는 전략을 제안했다. 순서는 backend core(domain+application+persistence), API+security, frontend 기능 묶음, 통합 검증이며 현재 persistence를 통과시키는 즉시 첫 개발 checkpoint를 push한다.
+- **[사용자 판단·승인 근거]**: 사용자는 구체 주기를 에이전트 판단에 위임하면서 작업 손실 방지와 진행 가시성을 위해 주기적 원격 보존을 요구했다.
+- **[최종 결정]**: 각 checkpoint는 관련 테스트, formatter, 보안 리뷰와 비밀값 검사가 PASS일 때만 Conventional Commit으로 생성·push한다. 현재 Steps 1~8 backend core 완료 직후 첫 개발 checkpoint를 push한다.
+
+---
+
+## U1 Code Generation Steps 7~8 — 영속성 구현 완료
+
+- **[타임스탬프]**: 2026-08-31T19:10:00+09:00
+- **[사용자 지시 원문]**:
+  > (새 사용자 입력 없음 — 승인된 코드 생성 계획과 Git checkpoint 전략 실행)
+- **[AI 제안 요약]**: Flyway 스키마, JPA/H2 어댑터, 안정적 백로그와 타입 필터 페이지 조회,
+  낙관적 잠금, append-only 감사 저장을 구현하고 테스트했다. Spring Boot 4의 Flyway 모듈 분리와
+  H2 2.4.240 제약식 평가 오류를 진단해 공식 starter와 Flyway 검증 H2 2.3.232 조합으로 정리했다.
+- **[사용자 판단·승인 근거]**: 사용자는 승인된 설계 범위의 코드·테스트·Git 실행을 위임했고,
+  테스트와 보안 리뷰가 통과한 backend core 논리 계층에서 checkpoint push하라는 전략을 승인했다.
+- **[최종 결정]**: Steps 7~8을 완료한다. 전체 verify 32개 테스트와 1,400회 속성 검증, 포매팅,
+  규칙 동기화 및 보안 리뷰가 PASS했으므로 첫 backend core checkpoint commit/push를 실행한다.
+
+---

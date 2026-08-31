@@ -3,7 +3,7 @@
 ## Project Information
 - **Project Type**: Greenfield
 - **Start Date**: 2026-08-30T14:54:39+09:00
-- **Current Stage**: CONSTRUCTION - U1 Backend Planning Core - Pre-code Git Baseline
+- **Current Stage**: CONSTRUCTION - U1 Backend Planning Core - Code Generation Part 2 Step 9
 
 ## Workspace State
 - **Existing Code**: No
@@ -30,10 +30,10 @@
 
 ### CONSTRUCTION PHASE
 - [ ] Functional Design per Unit - EXECUTE (U1 complete; U2 pending)
-- [ ] NFR Requirements per Unit - EXECUTE
-- [ ] NFR Design per Unit - EXECUTE
+- [ ] NFR Requirements per Unit - EXECUTE (U1 complete; U2 pending)
+- [ ] NFR Design per Unit - EXECUTE (U1 complete; U2 pending)
 - [x] Infrastructure Design - SKIP (local-only, no infrastructure services)
-- [ ] Code Generation per Unit - EXECUTE
+- [ ] Code Generation per Unit - EXECUTE (U1 Steps 1~8 complete; Step 9 REST contract tests next; U2 pending)
 - [ ] Build and Test - EXECUTE
 
 ## Extension Configuration
@@ -44,19 +44,20 @@
 | Property-Based Testing | Yes | Partial: PBT-02, PBT-03, PBT-07, PBT-08, PBT-09 | Requirements Analysis |
 
 ## Current Blocker
-U1 Functional Design is approved. The user requested a Git baseline push before actual
-code work. After the push, continue with U1 NFR Requirements and NFR Design.
+Pre-code baseline commit `19f1467` is pushed to `origin/main`. The U1 code generation plan is approved;
+Steps 1~8 scaffold/domain/application/persistence and security reviews passed. The backend core checkpoint
+is ready to commit and push; Step 9 REST contract tests follow after the checkpoint.
 
 ## Execution Plan Summary
 - **Execution Units**: 2 (Backend Planning Core, Frontend Planning Experience)
 - **Execute**: Application Design, Units Generation, Functional Design, NFR Requirements,
   NFR Design, Code Generation, Build and Test
 - **Skip**: Reverse Engineering, Infrastructure Design, Operations
-- **Next Stage After Approval**: Units Generation Part 2
+- **Next Stage After Approval**: U1 Backend Planning Core - generated code review
 
 ## Repository
 - **Remote**: https://github.com/rmfgh2004/test-todo-list.git
-- **Remote State**: Empty repository (no HEAD reference returned by `git ls-remote`)
+- **Remote State**: `origin/main` at pre-code baseline commit `19f1467`; first backend checkpoint pending
 
 ## Design Inputs
 - **Location**: aidlc-inputs/design/
