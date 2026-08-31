@@ -29,11 +29,11 @@
 - [x] Units Generation
 
 ### CONSTRUCTION PHASE
-- [ ] Functional Design per Unit - EXECUTE (U1 complete; U2 pending)
-- [ ] NFR Requirements per Unit - EXECUTE (U1 complete; U2 pending)
-- [ ] NFR Design per Unit - EXECUTE (U1 complete; U2 pending)
+- [ ] Functional Design per Unit - EXECUTE (U1 complete and approved; U2 in progress)
+- [ ] NFR Requirements per Unit - EXECUTE (U1 complete and approved; U2 pending)
+- [ ] NFR Design per Unit - EXECUTE (U1 complete and approved; U2 pending)
 - [x] Infrastructure Design - SKIP (local-only, no infrastructure services)
-- [ ] Code Generation per Unit - EXECUTE (U1 Steps 1~14 complete and awaiting the approval gate; U2 pending)
+- [ ] Code Generation per Unit - EXECUTE (U1 complete and approved; U2 pending)
 - [ ] Build and Test - EXECUTE
 
 ## Extension Configuration
