@@ -57,7 +57,7 @@ is ready to commit and push; Step 9 REST contract tests follow after the checkpo
 
 ## Repository
 - **Remote**: https://github.com/rmfgh2004/test-todo-list.git
-- **Remote State**: `origin/main` at pre-code baseline commit `19f1467`; first backend checkpoint pending
+- **Remote State**: `origin/main` at backend core checkpoint `1bd9650`
 
 ## Design Inputs
 - **Location**: aidlc-inputs/design/
