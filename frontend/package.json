@@ -19,6 +19,7 @@
     "test:coverage": "vitest run --coverage",
     "test:capacity": "vitest run --config vitest.capacity.config.ts",
     "test:e2e": "playwright test",
+    "test:e2e:journey": "playwright test --config playwright.journey.config.ts",
     "contract:generate": "openapi-typescript ../backend/openapi/planning-api.yaml -o src/shared/api/generated/planning-api.d.ts",
     "contract:check": "node scripts/check-contract-drift.mjs",
     "audit:deps": "npm audit --audit-level=high",

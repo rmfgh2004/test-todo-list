@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<style>
+  body { margin: 0; background: #eef0f3; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif; }
+  a { color: #4f46e5; text-decoration: none; }
+  a:hover { color: #3730a3; text-decoration: underline; }
+</style>
+</helmet>
+
+<section style="display:flex; flex-direction:column; gap:64px; padding:56px">
+
+  <div style="display:flex; flex-direction:column; gap:8px; max-width:900px">
+    <div style="font-size:13px; letter-spacing:0.14em; text-transform:uppercase; color:#475569">Tempo · 주간 타임블로킹</div>
+    <div style="font-size:28px; font-weight:650; color:#0f172a">아트보드 4개 — 데스크톱 1440px</div>
+    <div style="font-size:14px; line-height:1.7; color:#475569">1a 기본(라이트) / 1b 기본(다크) / 1c 드래그 중(라이트) / 1d 겹침 경고(다크). 15분 = 15px, 1시간 = 60px 스케일. 각 아트보드 우측에 키보드 조작·스크린리더 안내·Radix 매핑 주석.</div>
+  </div>
+
+  <!-- ============ 1a 기본 (라이트) ============ -->
+  <div id="1a" style="display:flex; gap:32px; align-items:flex-start">
+    <div style="display:flex; flex-direction:column; gap:12px">
+      <div style="display:flex; align-items:center; gap:10px">
+        <span style="display:inline-flex; align-items:center; height:24px; padding:0 10px; border-radius:8px; background:#0f172a; color:#ffffff; font-size:12px; font-weight:650; letter-spacing:0.04em">1a</span>
+        <span style="font-size:14px; color:#475569">기본 상태 · 라이트 · 블록 8개</span>
+      </div>
+
+      <div style="position:relative; width:1440px; background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; overflow:hidden">
+        <!-- top bar -->
+        <div style="display:flex; align-items:center; justify-content:space-between; height:64px; padding:0 24px; border-bottom:1px solid #e2e8f0; background:#ffffff">
+          <div style="display:flex; align-items:center; gap:12px">
+            <div style="display:flex; gap:4px">
+              <div style="position:relative; display:flex; align-items:center; justify-content:center; width:32px; height:32px; border:1px solid #e2e8f0; border-radius:8px; background:#ffffff; color:#0f172a; font-size:14px">‹
+                <sc-if value="{{ showFocusRings }}" hint-placeholder-val="{{ true }}"><div style="position:absolute; inset:-3px; border-radius:10px; outline:2px solid #4f46e5; outline-offset:2px; pointer-events:none"></div></sc-if>
+              </div>
+              <div style="display:flex; align-items:center; justify-content:center; width:32px; height:32px; border:1px solid #e2e8f0; border-radius:8px; background:#ffffff; color:#0f172a; font-size:14px">›</div>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:center; height:32px; padding:0 12px; border:1px solid #e2e8f0; border-radius:8px; font-size:13px; color:#0f172a">오늘</div>
+            <div style="font-size:17px; font-weight:650; color:#0f172a">2026년 8월 31일 – 9월 6일</div>
+            <div style="font-size:13px; color:#475569">36주차</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:16px">
+            <div style="display:flex; align-items:center; gap:8px; height:32px; padding:0 12px; border:1px solid #e2e8f0; border-radius:8px; background:#f8fafc">
+              <span style="font-size:13px; color:#0f172a">⏱</span>
+              <span style="font-size:13px; color:#475569">이번 주 남은 가용 시간</span>
+              <span style="font-size:13px; font-weight:650; color:#15803d">12h 30m</span>
+            </div>
+            <div style="font-size:12px; color:#475569">15분 스냅</div>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:stretch">
+          <!-- left: unplaced -->
+          <div style="width:320px; flex:0 0 320px; border-right:1px solid #e2e8f0; background:#f8fafc; padding:20px 16px; display:flex; flex-direction:column; gap:12px">
+            <div style="display:flex; align-items:baseline; justify-content:space-between">
+              <div style="font-size:14px; font-weight:650; color:#0f172a">미배치 할 일</div>
+              <div style="font-size:12px; color:#475569">5개 · 5h 45m</div>
+            </div>
+            <div style="font-size:12px; line-height:1.6; color:#475569">카드를 그리드로 끌어 놓으면 시작 시각이 확정됩니다.</div>
+
+            <div style="display:flex; flex-direction:column; gap:8px">
+              <div style="display:flex; flex-direction:column; gap:8px; padding:12px; background:#ffffff; border:1px solid #e2e8f0; border-radius:8px">
+                <div style="font-size:14px; font-weight:600; color:#0f172a">보고서 초안 검토</div>
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+                  <span style="display:inline-flex; align-items:center; gap:4px; height:22px; padding:0 8px; border-radius:8px; border:1px solid #b91c1c; color:#b91c1c; font-size:11px; font-weight:600">▲ 높음</span>
+                  <span style="font-size:12px; color:#475569">⏱ 1h 30m</span>
+                  <span style="font-size:12px; color:#475569">· 마감 8/31 (월)</span>
+                </div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px; padding:12px; background:#ffffff; border:1px solid #e2e8f0; border-radius:8px">
+                <div style="font-size:14px; font-weight:600; color:#0f172a">고객 피드백 정리</div>
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+                  <span style="display:inline-flex; align-items:center; gap:4px; height:22px; padding:0 8px; border-radius:8px; border:1px solid #b91c1c; color:#b91c1c; font-size:11px; font-weight:600">▲ 높음</span>
+                  <span style="font-size:12px; color:#475569">⏱ 1h 00m</span>
+                  <span style="font-size:12px; color:#475569">· 마감 9/1 (화)</span>
+                </div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px; padding:12px; background:#ffffff; border:1px solid #e2e8f0; border-radius:8px">
+                <div style="font-size:14px; font-weight:600; color:#0f172a">스프린트 백로그 정리</div>
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+                  <span style="display:inline-flex; align-items:center; gap:4px; height:22px; padding:0 8px; border-radius:8px; border:1px solid #a16207; color:#a16207; font-size:11px; font-weight:600">● 보통</span>
+                  <span style="font-size:12px; color:#475569">⏱ 45m</span>
+                  <span style="font-size:12px; color:#475569">· 마감 9/2 (수)</span>
+                </div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px; padding:12px; background:#ffffff; border:1px solid #e2e8f0; border-radius:8px">
+                <div style="font-size:14px; font-weight:600; color:#0f172a">디자인 시스템 문서화</div>
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+                  <span style="display:inline-flex; align-items:center; gap:4px; height:22px; padding:0 8px; border-radius:8px; border:1px solid #a16207; color:#a16207; font-size:11px; font-weight:600">● 보통</span>
+                  <span style="font-size:12px; color:#475569">⏱ 2h 00m</span>
+                  <span style="font-size:12px; color:#475569">· 마감 9/5 (토)</span>
+                </div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px; padding:12px; background:#ffffff; border:1px solid #e2e8f0; border-radius:8px">
+                <div style="font-size:14px; font-weight:600; color:#0f172a">채용 공고 문구 수정</div>
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+                  <span style="display:inline-flex; align-items:center; gap:4px; height:22px; padding:0 8px; border-radius:8px; border:1px solid #475569; color:#475569; font-size:11px; font-weight:600">▼ 낮음</span>
+                  <span style="font-size:12px; color:#475569">⏱ 30m</span>
+                  <span style="font-size:12px; color:#475569">· 마감 9/4 (금)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- right: week grid -->
+          <div style="flex:1; display:flex; flex-direction:column; background:#ffffff">
+            <div style="display:flex; border-bottom:1px solid #e2e8f0">
+              <div style="width:56px; flex:0 0 56px"></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:1px solid #e2e8f0"><span style="font-size:12px; color:#475569">월</span><span style="font-size:15px; font-weight:650; color:#0f172a">31</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:1px solid #e2e8f0"><span style="font-size:12px; color:#475569">화</span><span style="font-size:15px; font-weight:650; color:#0f172a">1</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:1px solid #e2e8f0"><span style="font-size:12px; color:#475569">수</span><span style="font-size:15px; font-weight:650; color:#0f172a">2</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:1px solid #e2e8f0"><span style="font-size:12px; color:#475569">목</span><span style="font-size:15px; font-weight:650; color:#0f172a">3</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:1px solid #e2e8f0"><span style="font-size:12px; color:#475569">금</span><span style="font-size:15px; font-weight:650; color:#0f172a">4</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:1px solid #e2e8f0; background:#f8fafc"><span style="font-size:12px; color:#475569">토</span><span style="font-size:15px; font-weight:650; color:#475569">5</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:1px solid #e2e8f0; background:#f8fafc"><span style="font-size:12px; color:#475569">일</span><span style="font-size:15px; font-weight:650; color:#475569">6</span></div>
+            </div>
+
+            <div style="display:flex">
+              <!-- time axis -->
+              <div style="width:56px; flex:0 0 56px; display:flex; flex-direction:column; padding-top:1px">
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">08:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">09:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">10:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">11:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">12:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">13:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">14:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">15:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">16:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">17:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">18:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">19:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">20:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">21:00</div>
+                <div style="height:0; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">22:00</div>
+              </div>
+              <!-- 월 -->
+              <div style="position:relative; flex:1; height:840px; border-left:1px solid #e2e8f0; background-image:repeating-linear-gradient(to bottom, #e2e8f0 0 1px, transparent 1px 60px), repeating-linear-gradient(to bottom, #f1f5f9 0 1px, transparent 1px 15px)">
+                <div style="position:absolute; left:4px; right:4px; top:60px; height:120px; padding:8px 10px; border-radius:8px; background:#f8fafc; border:1px solid #e2e8f0; border-left:3px solid #4f46e5; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#0f172a; line-height:1.3">보고서 작성</div>
+                  <div style="font-size:11px; color:#475569; margin-top:4px">09:00–11:00 · 2h</div>
+                  <div style="display:inline-flex; align-items:center; gap:3px; margin-top:6px; height:18px; padding:0 6px; border-radius:8px; border:1px solid #b91c1c; color:#b91c1c; font-size:10px; font-weight:600">▲ 높음</div>
+                </div>
+                <div style="position:absolute; left:4px; right:4px; top:360px; height:90px; padding:8px 10px; border-radius:8px; background:#f8fafc; border:1px solid #e2e8f0; border-left:3px solid #4f46e5; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#0f172a; line-height:1.3">팀 회의 준비</div>
+                  <div style="font-size:11px; color:#475569; margin-top:4px">14:00–15:30 · 1h 30m</div>
+                </div>
+              </div>
+              <!-- 화 -->
+              <div style="position:relative; flex:1; height:840px; border-left:1px solid #e2e8f0; background-image:repeating-linear-gradient(to bottom, #e2e8f0 0 1px, transparent 1px 60px), repeating-linear-gradient(to bottom, #f1f5f9 0 1px, transparent 1px 15px)">
+                <div style="position:absolute; left:4px; right:4px; top:120px; height:120px; padding:8px 10px; border-radius:8px; background:#f8fafc; border:1px solid #e2e8f0; border-left:3px solid #4f46e5; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#0f172a; line-height:1.3">API 설계 리뷰</div>
+                  <div style="font-size:11px; color:#475569; margin-top:4px">10:00–12:00 · 2h</div>
+                </div>
+                <div style="position:absolute; left:4px; right:4px; top:480px; height:60px; padding:8px 10px; border-radius:8px; background:#f8fafc; border:1px solid #e2e8f0; border-left:3px solid #4f46e5; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#0f172a; line-height:1.3">고객 콜</div>
+                  <div style="font-size:11px; color:#475569; margin-top:4px">16:00–17:00 · 1h</div>
+                </div>
+              </div>
+              <!-- 수 -->
+              <div style="position:relative; flex:1; height:840px; border-left:1px solid #e2e8f0; background-image:repeating-linear-gradient(to bottom, #e2e8f0 0 1px, transparent 1px 60px), repeating-linear-gradient(to bottom, #f1f5f9 0 1px, transparent 1px 15px)">
+                <div style="position:absolute; left:4px; right:4px; top:30px; height:90px; padding:8px 10px; border-radius:8px; background:#f8fafc; border:1px solid #e2e8f0; border-left:3px solid #4f46e5; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#0f172a; line-height:1.3">주간 계획 수립</div>
+                  <div style="font-size:11px; color:#475569; margin-top:4px">08:30–10:00 · 1h 30m</div>
+                </div>
+                <div style="position:absolute; left:4px; right:4px; top:420px; height:90px; padding:8px 10px; border-radius:8px; background:#f8fafc; border:1px solid #e2e8f0; border-left:3px solid #4f46e5; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#0f172a; line-height:1.3">디자인 QA</div>
+                  <div style="font-size:11px; color:#475569; margin-top:4px">15:00–16:30 · 1h 30m</div>
+                </div>
+              </div>
+              <!-- 목 -->
+              <div style="position:relative; flex:1; height:840px; border-left:1px solid #e2e8f0; background-image:repeating-linear-gradient(to bottom, #e2e8f0 0 1px, transparent 1px 60px), repeating-linear-gradient(to bottom, #f1f5f9 0 1px, transparent 1px 15px)">
+                <div style="position:absolute; left:4px; right:4px; top:180px; height:120px; padding:8px 10px; border-radius:8px; background:#f8fafc; border:1px solid #e2e8f0; border-left:3px solid #4f46e5; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#0f172a; line-height:1.3">채용 인터뷰</div>
+                  <div style="font-size:11px; color:#475569; margin-top:4px">11:00–13:00 · 2h</div>
+                  <div style="display:inline-flex; align-items:center; gap:3px; margin-top:6px; height:18px; padding:0 6px; border-radius:8px; border:1px solid #b91c1c; color:#b91c1c; font-size:10px; font-weight:600">▲ 높음</div>
+                </div>
+              </div>
+              <!-- 금 -->
+              <div style="position:relative; flex:1; height:840px; border-left:1px solid #e2e8f0; background-image:repeating-linear-gradient(to bottom, #e2e8f0 0 1px, transparent 1px 60px), repeating-linear-gradient(to bottom, #f1f5f9 0 1px, transparent 1px 15px)">
+                <div style="position:absolute; left:4px; right:4px; top:90px; height:90px; padding:8px 10px; border-radius:8px; background:#f8fafc; border:1px solid #e2e8f0; border-left:3px solid #4f46e5; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#0f172a; line-height:1.3">스프린트 회고</div>
+                  <div style="font-size:11px; color:#475569; margin-top:4px">09:30–11:00 · 1h 30m</div>
+                </div>
+                <div style="position:absolute; left:4px; right:4px; top:480px; height:60px; padding:8px 10px; border-radius:8px; background:#f8fafc; border:1px solid #e2e8f0; border-left:3px solid #4f46e5; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#0f172a; line-height:1.3">1:1 미팅</div>
+                  <div style="font-size:11px; color:#475569; margin-top:4px">16:00–17:00 · 1h</div>
+                </div>
+              </div>
+              <!-- 토 -->
+              <div style="position:relative; flex:1; height:840px; border-left:1px solid #e2e8f0; background-color:#f8fafc; background-image:repeating-linear-gradient(to bottom, #e2e8f0 0 1px, transparent 1px 60px)"></div>
+              <!-- 일 -->
+              <div style="position:relative; flex:1; height:840px; border-left:1px solid #e2e8f0; background-color:#f8fafc; background-image:repeating-linear-gradient(to bottom, #e2e8f0 0 1px, transparent 1px 60px)"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <sc-if value="{{ showAnnotations }}" hint-placeholder-val="{{ true }}">
+    <div style="width:340px; flex:0 0 340px; display:flex; flex-direction:column; gap:20px; padding:20px; background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; margin-top:34px">
+      <div style="font-size:13px; font-weight:650; color:#0f172a">1a 주석</div>
+      <div style="display:flex; flex-direction:column; gap:8px">
+        <div style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#475569">키보드 조작</div>
+        <div style="font-size:12px; line-height:1.7; color:#0f172a">
+          <div><span style="font-family:ui-monospace, Menlo, monospace; color:#4f46e5">Tab</span> 좌측 목록 → 그리드 순서로 이동. 그리드 진입 시 오늘·다음 빈 슬롯에 포커스.</div>
+          <div><span style="font-family:ui-monospace, Menlo, monospace; color:#4f46e5">← →</span> 하루 단위 이동 · <span style="font-family:ui-monospace, Menlo, monospace; color:#4f46e5">↑ ↓</span> 15분 단위 이동</div>
+          <div><span style="font-family:ui-monospace, Menlo, monospace; color:#4f46e5">Shift+↑ ↓</span> 블록 길이 15분씩 조절(최소 15분)</div>
+          <div><span style="font-family:ui-monospace, Menlo, monospace; color:#4f46e5">Enter</span> 확정 · <span style="font-family:ui-monospace, Menlo, monospace; color:#4f46e5">Esc</span> 취소하고 원위치</div>
+          <div><span style="font-family:ui-monospace, Menlo, monospace; color:#4f46e5">Space</span> 좌측 카드 집기 / 놓기 (드래그 대체 경로)</div>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px">
+        <div style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#475569">포커스 표시</div>
+        <div style="font-size:12px; line-height:1.7; color:#0f172a">모든 인터랙티브 요소: <span style="font-family:ui-monospace, Menlo, monospace">outline: 2px solid #4f46e5; outline-offset: 2px</span>. 마우스 클릭 시에도 유지(:focus-visible 기준). 예시는 주 이동 ‹ 버튼.</div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px">
+        <div style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#475569">스크린리더</div>
+        <div style="font-size:12px; line-height:1.7; color:#0f172a">
+          <div>그리드 <span style="font-family:ui-monospace, Menlo, monospace">role="grid"</span>, 열 = 요일, 행 = 15분 슬롯. 블록은 <span style="font-family:ui-monospace, Menlo, monospace">role="gridcell"</span>.</div>
+          <div>블록 낭독: “보고서 작성, 9월 1일 월요일 오전 9시부터 11시까지, 2시간, 우선순위 높음.”</div>
+          <div>빈 슬롯 낭독: “월요일 오후 1시 15분, 비어 있음.”</div>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px">
+        <div style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#475569">Radix 매핑</div>
+        <div style="font-size:12px; line-height:1.7; color:#0f172a">주 이동 = 일반 버튼 / 블록 클릭 시 상세 = <span style="font-family:ui-monospace, Menlo, monospace">Popover</span> / 일정 편집 = <span style="font-family:ui-monospace, Menlo, monospace">Dialog</span> / 뷰 전환(주·일) = <span style="font-family:ui-monospace, Menlo, monospace">Tabs</span> / 우선순위 변경 = <span style="font-family:ui-monospace, Menlo, monospace">Select</span>.</div>
+      </div>
+    </div>
+    </sc-if>
+  </div>
+
+  <!-- ============ 1b 기본 (다크) ============ -->
+  <div id="1b" style="display:flex; gap:32px; align-items:flex-start">
+    <div style="display:flex; flex-direction:column; gap:12px">
+      <div style="display:flex; align-items:center; gap:10px">
+        <span style="display:inline-flex; align-items:center; height:24px; padding:0 10px; border-radius:8px; background:#0f172a; color:#ffffff; font-size:12px; font-weight:650; letter-spacing:0.04em">1b</span>
+        <span style="font-size:14px; color:#475569">기본 상태 · 다크 · 1a와 동일 구성</span>
+      </div>
+
+      <div style="width:1440px; background:#0f172a; border:1px solid #334155; border-radius:8px; overflow:hidden">
+        <div style="display:flex; align-items:center; justify-content:space-between; height:64px; padding:0 24px; border-bottom:1px solid #334155">
+          <div style="display:flex; align-items:center; gap:12px">
+            <div style="display:flex; gap:4px">
+              <div style="position:relative; display:flex; align-items:center; justify-content:center; width:32px; height:32px; border:1px solid #334155; border-radius:8px; background:#1e293b; color:#f1f5f9; font-size:14px">‹
+                <sc-if value="{{ showFocusRings }}" hint-placeholder-val="{{ true }}"><div style="position:absolute; inset:-3px; border-radius:10px; outline:2px solid #818cf8; outline-offset:2px; pointer-events:none"></div></sc-if>
+              </div>
+              <div style="display:flex; align-items:center; justify-content:center; width:32px; height:32px; border:1px solid #334155; border-radius:8px; background:#1e293b; color:#f1f5f9; font-size:14px">›</div>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:center; height:32px; padding:0 12px; border:1px solid #334155; border-radius:8px; background:#1e293b; font-size:13px; color:#f1f5f9">오늘</div>
+            <div style="font-size:17px; font-weight:650; color:#f1f5f9">2026년 8월 31일 – 9월 6일</div>
+            <div style="font-size:13px; color:#cbd5e1">36주차</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:16px">
+            <div style="display:flex; align-items:center; gap:8px; height:32px; padding:0 12px; border:1px solid #334155; border-radius:8px; background:#1e293b">
+              <span style="font-size:13px; color:#f1f5f9">⏱</span>
+              <span style="font-size:13px; color:#cbd5e1">이번 주 남은 가용 시간</span>
+              <span style="font-size:13px; font-weight:650; color:#86efac">12h 30m</span>
+            </div>
+            <div style="font-size:12px; color:#cbd5e1">15분 스냅</div>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:stretch">
+          <div style="width:320px; flex:0 0 320px; border-right:1px solid #334155; background:#1e293b; padding:20px 16px; display:flex; flex-direction:column; gap:12px">
+            <div style="display:flex; align-items:baseline; justify-content:space-between">
+              <div style="font-size:14px; font-weight:650; color:#f1f5f9">미배치 할 일</div>
+              <div style="font-size:12px; color:#cbd5e1">5개 · 5h 45m</div>
+            </div>
+            <div style="font-size:12px; line-height:1.6; color:#cbd5e1">카드를 그리드로 끌어 놓으면 시작 시각이 확정됩니다.</div>
+            <div style="display:flex; flex-direction:column; gap:8px">
+              <div style="display:flex; flex-direction:column; gap:8px; padding:12px; background:#0f172a; border:1px solid #334155; border-radius:8px">
+                <div style="font-size:14px; font-weight:600; color:#f1f5f9">보고서 초안 검토</div>
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+                  <span style="display:inline-flex; align-items:center; gap:4px; height:22px; padding:0 8px; border-radius:8px; border:1px solid #fca5a5; color:#fca5a5; font-size:11px; font-weight:600">▲ 높음</span>
+                  <span style="font-size:12px; color:#cbd5e1">⏱ 1h 30m</span>
+                  <span style="font-size:12px; color:#cbd5e1">· 마감 8/31 (월)</span>
+                </div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px; padding:12px; background:#0f172a; border:1px solid #334155; border-radius:8px">
+                <div style="font-size:14px; font-weight:600; color:#f1f5f9">고객 피드백 정리</div>
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+                  <span style="display:inline-flex; align-items:center; gap:4px; height:22px; padding:0 8px; border-radius:8px; border:1px solid #fca5a5; color:#fca5a5; font-size:11px; font-weight:600">▲ 높음</span>
+                  <span style="font-size:12px; color:#cbd5e1">⏱ 1h 00m</span>
+                  <span style="font-size:12px; color:#cbd5e1">· 마감 9/1 (화)</span>
+                </div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px; padding:12px; background:#0f172a; border:1px solid #334155; border-radius:8px">
+                <div style="font-size:14px; font-weight:600; color:#f1f5f9">스프린트 백로그 정리</div>
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+                  <span style="display:inline-flex; align-items:center; gap:4px; height:22px; padding:0 8px; border-radius:8px; border:1px solid #fcd34d; color:#fcd34d; font-size:11px; font-weight:600">● 보통</span>
+                  <span style="font-size:12px; color:#cbd5e1">⏱ 45m</span>
+                  <span style="font-size:12px; color:#cbd5e1">· 마감 9/2 (수)</span>
+                </div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px; padding:12px; background:#0f172a; border:1px solid #334155; border-radius:8px">
+                <div style="font-size:14px; font-weight:600; color:#f1f5f9">디자인 시스템 문서화</div>
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+                  <span style="display:inline-flex; align-items:center; gap:4px; height:22px; padding:0 8px; border-radius:8px; border:1px solid #fcd34d; color:#fcd34d; font-size:11px; font-weight:600">● 보통</span>
+                  <span style="font-size:12px; color:#cbd5e1">⏱ 2h 00m</span>
+                  <span style="font-size:12px; color:#cbd5e1">· 마감 9/5 (토)</span>
+                </div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px; padding:12px; background:#0f172a; border:1px solid #334155; border-radius:8px">
+                <div style="font-size:14px; font-weight:600; color:#f1f5f9">채용 공고 문구 수정</div>
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+                  <span style="display:inline-flex; align-items:center; gap:4px; height:22px; padding:0 8px; border-radius:8px; border:1px solid #cbd5e1; color:#cbd5e1; font-size:11px; font-weight:600">▼ 낮음</span>
+                  <span style="font-size:12px; color:#cbd5e1">⏱ 30m</span>
+                  <span style="font-size:12px; color:#cbd5e1">· 마감 9/4 (금)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="flex:1; display:flex; flex-direction:column">
+            <div style="display:flex; border-bottom:1px solid #334155">
+              <div style="width:56px; flex:0 0 56px"></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:1px solid #334155"><span style="font-size:12px; color:#cbd5e1">월</span><span style="font-size:15px; font-weight:650; color:#f1f5f9">31</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:1px solid #334155"><span style="font-size:12px; color:#cbd5e1">화</span><span style="font-size:15px; font-weight:650; color:#f1f5f9">1</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:1px solid #334155"><span style="font-size:12px; color:#cbd5e1">수</span><span style="font-size:15px; font-weight:650; color:#f1f5f9">2</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:1px solid #334155"><span style="font-size:12px; color:#cbd5e1">목</span><span style="font-size:15px; font-weight:650; color:#f1f5f9">3</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:1px solid #334155"><span style="font-size:12px; color:#cbd5e1">금</span><span style="font-size:15px; font-weight:650; color:#f1f5f9">4</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:1px solid #334155; background:#1e293b"><span style="font-size:12px; color:#cbd5e1">토</span><span style="font-size:15px; font-weight:650; color:#cbd5e1">5</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:1px solid #334155; background:#1e293b"><span style="font-size:12px; color:#cbd5e1">일</span><span style="font-size:15px; font-weight:650; color:#cbd5e1">6</span></div>
+            </div>
+
+            <div style="display:flex">
+              <div style="width:56px; flex:0 0 56px; display:flex; flex-direction:column; padding-top:1px">
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">08:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">09:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">10:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">11:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">12:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">13:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">14:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">15:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">16:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">17:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">18:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">19:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">20:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">21:00</div>
+                <div style="height:0; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">22:00</div>
+              </div>
+              <div style="position:relative; flex:1; height:840px; border-left:1px solid #334155; background-image:repeating-linear-gradient(to bottom, #334155 0 1px, transparent 1px 60px), repeating-linear-gradient(to bottom, #1e293b 0 1px, transparent 1px 15px)">
+                <div style="position:absolute; left:4px; right:4px; top:60px; height:120px; padding:8px 10px; border-radius:8px; background:#1e293b; border:1px solid #334155; border-left:3px solid #818cf8; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#f1f5f9; line-height:1.3">보고서 작성</div>
+                  <div style="font-size:11px; color:#cbd5e1; margin-top:4px">09:00–11:00 · 2h</div>
+                  <div style="display:inline-flex; align-items:center; gap:3px; margin-top:6px; height:18px; padding:0 6px; border-radius:8px; border:1px solid #fca5a5; color:#fca5a5; font-size:10px; font-weight:600">▲ 높음</div>
+                </div>
+                <div style="position:absolute; left:4px; right:4px; top:360px; height:90px; padding:8px 10px; border-radius:8px; background:#1e293b; border:1px solid #334155; border-left:3px solid #818cf8; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#f1f5f9; line-height:1.3">팀 회의 준비</div>
+                  <div style="font-size:11px; color:#cbd5e1; margin-top:4px">14:00–15:30 · 1h 30m</div>
+                </div>
+              </div>
+              <div style="position:relative; flex:1; height:840px; border-left:1px solid #334155; background-image:repeating-linear-gradient(to bottom, #334155 0 1px, transparent 1px 60px), repeating-linear-gradient(to bottom, #1e293b 0 1px, transparent 1px 15px)">
+                <div style="position:absolute; left:4px; right:4px; top:120px; height:120px; padding:8px 10px; border-radius:8px; background:#1e293b; border:1px solid #334155; border-left:3px solid #818cf8; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#f1f5f9; line-height:1.3">API 설계 리뷰</div>
+                  <div style="font-size:11px; color:#cbd5e1; margin-top:4px">10:00–12:00 · 2h</div>
+                </div>
+                <div style="position:absolute; left:4px; right:4px; top:480px; height:60px; padding:8px 10px; border-radius:8px; background:#1e293b; border:1px solid #334155; border-left:3px solid #818cf8; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#f1f5f9; line-height:1.3">고객 콜</div>
+                  <div style="font-size:11px; color:#cbd5e1; margin-top:4px">16:00–17:00 · 1h</div>
+                </div>
+              </div>
+              <div style="position:relative; flex:1; height:840px; border-left:1px solid #334155; background-image:repeating-linear-gradient(to bottom, #334155 0 1px, transparent 1px 60px), repeating-linear-gradient(to bottom, #1e293b 0 1px, transparent 1px 15px)">
+                <div style="position:absolute; left:4px; right:4px; top:30px; height:90px; padding:8px 10px; border-radius:8px; background:#1e293b; border:1px solid #334155; border-left:3px solid #818cf8; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#f1f5f9; line-height:1.3">주간 계획 수립</div>
+                  <div style="font-size:11px; color:#cbd5e1; margin-top:4px">08:30–10:00 · 1h 30m</div>
+                </div>
+                <div style="position:absolute; left:4px; right:4px; top:420px; height:90px; padding:8px 10px; border-radius:8px; background:#1e293b; border:1px solid #334155; border-left:3px solid #818cf8; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#f1f5f9; line-height:1.3">디자인 QA</div>
+                  <div style="font-size:11px; color:#cbd5e1; margin-top:4px">15:00–16:30 · 1h 30m</div>
+                </div>
+              </div>
+              <div style="position:relative; flex:1; height:840px; border-left:1px solid #334155; background-image:repeating-linear-gradient(to bottom, #334155 0 1px, transparent 1px 60px), repeating-linear-gradient(to bottom, #1e293b 0 1px, transparent 1px 15px)">
+                <div style="position:absolute; left:4px; right:4px; top:180px; height:120px; padding:8px 10px; border-radius:8px; background:#1e293b; border:1px solid #334155; border-left:3px solid #818cf8; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#f1f5f9; line-height:1.3">채용 인터뷰</div>
+                  <div style="font-size:11px; color:#cbd5e1; margin-top:4px">11:00–13:00 · 2h</div>
+                  <div style="display:inline-flex; align-items:center; gap:3px; margin-top:6px; height:18px; padding:0 6px; border-radius:8px; border:1px solid #fca5a5; color:#fca5a5; font-size:10px; font-weight:600">▲ 높음</div>
+                </div>
+              </div>
+              <div style="position:relative; flex:1; height:840px; border-left:1px solid #334155; background-image:repeating-linear-gradient(to bottom, #334155 0 1px, transparent 1px 60px), repeating-linear-gradient(to bottom, #1e293b 0 1px, transparent 1px 15px)">
+                <div style="position:absolute; left:4px; right:4px; top:90px; height:90px; padding:8px 10px; border-radius:8px; background:#1e293b; border:1px solid #334155; border-left:3px solid #818cf8; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#f1f5f9; line-height:1.3">스프린트 회고</div>
+                  <div style="font-size:11px; color:#cbd5e1; margin-top:4px">09:30–11:00 · 1h 30m</div>
+                </div>
+                <div style="position:absolute; left:4px; right:4px; top:480px; height:60px; padding:8px 10px; border-radius:8px; background:#1e293b; border:1px solid #334155; border-left:3px solid #818cf8; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#f1f5f9; line-height:1.3">1:1 미팅</div>
+                  <div style="font-size:11px; color:#cbd5e1; margin-top:4px">16:00–17:00 · 1h</div>
+                </div>
+              </div>
+              <div style="position:relative; flex:1; height:840px; border-left:1px solid #334155; background-color:#1e293b; background-image:repeating-linear-gradient(to bottom, #334155 0 1px, transparent 1px 60px)"></div>
+              <div style="position:relative; flex:1; height:840px; border-left:1px solid #334155; background-color:#1e293b; background-image:repeating-linear-gradient(to bottom, #334155 0 1px, transparent 1px 60px)"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <sc-if value="{{ showAnnotations }}" hint-placeholder-val="{{ true }}">
+    <div style="width:340px; flex:0 0 340px; display:flex; flex-direction:column; gap:20px; padding:20px; background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; margin-top:34px">
+      <div style="font-size:13px; font-weight:650; color:#0f172a">1b 주석</div>
+      <div style="display:flex; flex-direction:column; gap:8px">
+        <div style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#475569">키보드 조작</div>
+        <div style="font-size:12px; line-height:1.7; color:#0f172a">1a와 동일. 다크에서도 포커스 링은 accent(#818cf8) 2px, offset 2px — surface #0f172a 대비 4.5:1 이상.</div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px">
+        <div style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#475569">대비 검증</div>
+        <div style="font-size:12px; line-height:1.7; color:#0f172a">
+          <div>text #f1f5f9 on surface #0f172a → 15.6:1</div>
+          <div>muted #cbd5e1 on raised #1e293b → 9.4:1</div>
+          <div>danger #fca5a5 on raised #1e293b → 7.5:1</div>
+          <div>success #86efac on surface #0f172a → 12.9:1</div>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px">
+        <div style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#475569">스크린리더</div>
+        <div style="font-size:12px; line-height:1.7; color:#0f172a">테마 전환은 낭독하지 않음(<span style="font-family:ui-monospace, Menlo, monospace">aria-live</span> 미사용). 우선순위는 색이 아니라 배지 텍스트(“우선순위 높음”)로만 전달.</div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px">
+        <div style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#475569">3중 인코딩</div>
+        <div style="font-size:12px; line-height:1.7; color:#0f172a">높음 = danger 색 + ▲ + “높음” / 보통 = warning + ● + “보통” / 낮음 = muted + ▼ + “낮음”. 색을 제거해도 의미가 유지됨.</div>
+      </div>
+    </div>
+    </sc-if>
+  </div>
+
+  <!-- ============ 1c 드래그 중 (라이트) ============ -->
+  <div id="1c" style="display:flex; gap:32px; align-items:flex-start">
+    <div style="display:flex; flex-direction:column; gap:12px">
+      <div style="display:flex; align-items:center; gap:10px">
+        <span style="display:inline-flex; align-items:center; height:24px; padding:0 10px; border-radius:8px; background:#0f172a; color:#ffffff; font-size:12px; font-weight:650; letter-spacing:0.04em">1c</span>
+        <span style="font-size:14px; color:#475569">드래그 중 · 라이트 · 화요일 14:00 드롭 예정</span>
+      </div>
+
+      <div style="width:1440px; background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; overflow:hidden">
+        <div style="display:flex; align-items:center; justify-content:space-between; height:64px; padding:0 24px; border-bottom:1px solid #e2e8f0">
+          <div style="display:flex; align-items:center; gap:12px">
+            <div style="display:flex; gap:4px">
+              <div style="display:flex; align-items:center; justify-content:center; width:32px; height:32px; border:1px solid #e2e8f0; border-radius:8px; color:#0f172a; font-size:14px">‹</div>
+              <div style="display:flex; align-items:center; justify-content:center; width:32px; height:32px; border:1px solid #e2e8f0; border-radius:8px; color:#0f172a; font-size:14px">›</div>
+            </div>
+            <div style="font-size:17px; font-weight:650; color:#0f172a">2026년 8월 31일 – 9월 6일</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:16px">
+            <div style="display:flex; align-items:center; gap:8px; height:32px; padding:0 12px; border:1px solid #4f46e5; border-radius:8px; background:#f8fafc">
+              <span style="font-size:13px; color:#0f172a">⏱</span>
+              <span style="font-size:13px; color:#475569">배치 후 남는 가용 시간</span>
+              <span style="font-size:13px; font-weight:650; color:#4f46e5">11h 00m</span>
+              <span style="font-size:12px; color:#475569">(−1h 30m)</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:stretch">
+          <div style="width:320px; flex:0 0 320px; border-right:1px solid #e2e8f0; background:#f8fafc; padding:20px 16px; display:flex; flex-direction:column; gap:12px">
+            <div style="display:flex; align-items:baseline; justify-content:space-between">
+              <div style="font-size:14px; font-weight:650; color:#0f172a">미배치 할 일</div>
+              <div style="font-size:12px; color:#475569">4개 · 4h 15m</div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px">
+              <div style="display:flex; align-items:center; justify-content:center; height:74px; border:2px dashed #4f46e5; border-radius:8px; background:rgba(79,70,229,0.06); font-size:12px; color:#4f46e5">‘보고서 초안 검토’ 이동 중</div>
+              <div style="display:flex; flex-direction:column; gap:8px; padding:12px; background:#ffffff; border:1px solid #e2e8f0; border-radius:8px">
+                <div style="font-size:14px; font-weight:600; color:#0f172a">고객 피드백 정리</div>
+                <div style="display:flex; align-items:center; gap:8px"><span style="display:inline-flex; align-items:center; gap:4px; height:22px; padding:0 8px; border-radius:8px; border:1px solid #b91c1c; color:#b91c1c; font-size:11px; font-weight:600">▲ 높음</span><span style="font-size:12px; color:#475569">⏱ 1h 00m</span></div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px; padding:12px; background:#ffffff; border:1px solid #e2e8f0; border-radius:8px">
+                <div style="font-size:14px; font-weight:600; color:#0f172a">스프린트 백로그 정리</div>
+                <div style="display:flex; align-items:center; gap:8px"><span style="display:inline-flex; align-items:center; gap:4px; height:22px; padding:0 8px; border-radius:8px; border:1px solid #a16207; color:#a16207; font-size:11px; font-weight:600">● 보통</span><span style="font-size:12px; color:#475569">⏱ 45m</span></div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px; padding:12px; background:#ffffff; border:1px solid #e2e8f0; border-radius:8px">
+                <div style="font-size:14px; font-weight:600; color:#0f172a">디자인 시스템 문서화</div>
+                <div style="display:flex; align-items:center; gap:8px"><span style="display:inline-flex; align-items:center; gap:4px; height:22px; padding:0 8px; border-radius:8px; border:1px solid #a16207; color:#a16207; font-size:11px; font-weight:600">● 보통</span><span style="font-size:12px; color:#475569">⏱ 2h 00m</span></div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px; padding:12px; background:#ffffff; border:1px solid #e2e8f0; border-radius:8px">
+                <div style="font-size:14px; font-weight:600; color:#0f172a">채용 공고 문구 수정</div>
+                <div style="display:flex; align-items:center; gap:8px"><span style="display:inline-flex; align-items:center; gap:4px; height:22px; padding:0 8px; border-radius:8px; border:1px solid #475569; color:#475569; font-size:11px; font-weight:600">▼ 낮음</span><span style="font-size:12px; color:#475569">⏱ 30m</span></div>
+              </div>
+            </div>
+            <div style="margin-top:auto; display:flex; gap:8px; align-items:flex-start; padding:10px 12px; border:1px solid #e2e8f0; border-radius:8px; background:#ffffff">
+              <span style="font-size:12px; color:#0f172a">⌨</span>
+              <div style="font-size:11px; line-height:1.6; color:#475569">드래그 대신 <span style="font-family:ui-monospace, Menlo, monospace; color:#4f46e5">Space</span>로 집고 방향키로 이동, <span style="font-family:ui-monospace, Menlo, monospace; color:#4f46e5">Enter</span>로 확정.</div>
+            </div>
+          </div>
+
+          <div style="flex:1; display:flex; flex-direction:column; position:relative">
+            <div style="display:flex; border-bottom:1px solid #e2e8f0">
+              <div style="width:56px; flex:0 0 56px"></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:1px solid #e2e8f0"><span style="font-size:12px; color:#475569">월</span><span style="font-size:15px; font-weight:650; color:#0f172a">31</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:2px solid #4f46e5; border-right:2px solid #4f46e5; background:#f8fafc"><span style="font-size:12px; color:#4f46e5; font-weight:600">화</span><span style="font-size:15px; font-weight:650; color:#4f46e5">1</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0"><span style="font-size:12px; color:#475569">수</span><span style="font-size:15px; font-weight:650; color:#0f172a">2</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:1px solid #e2e8f0"><span style="font-size:12px; color:#475569">목</span><span style="font-size:15px; font-weight:650; color:#0f172a">3</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:1px solid #e2e8f0"><span style="font-size:12px; color:#475569">금</span><span style="font-size:15px; font-weight:650; color:#0f172a">4</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:1px solid #e2e8f0; background:#f8fafc"><span style="font-size:12px; color:#475569">토</span><span style="font-size:15px; font-weight:650; color:#475569">5</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:1px solid #e2e8f0; background:#f8fafc"><span style="font-size:12px; color:#475569">일</span><span style="font-size:15px; font-weight:650; color:#475569">6</span></div>
+            </div>
+
+            <div style="display:flex">
+              <div style="width:56px; flex:0 0 56px; display:flex; flex-direction:column; padding-top:1px">
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">08:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">09:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">10:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">11:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">12:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">13:00</div>
+                <div style="height:60px; font-size:11px; font-weight:650; color:#4f46e5; text-align:right; padding-right:8px; transform:translateY(-6px)">14:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">15:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">16:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">17:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">18:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">19:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">20:00</div>
+                <div style="height:60px; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">21:00</div>
+                <div style="height:0; font-size:11px; color:#475569; text-align:right; padding-right:8px; transform:translateY(-6px)">22:00</div>
+              </div>
+              <!-- 월 -->
+              <div style="position:relative; flex:1; height:840px; border-left:1px solid #e2e8f0; background-image:repeating-linear-gradient(to bottom, #e2e8f0 0 1px, transparent 1px 60px), repeating-linear-gradient(to bottom, #f1f5f9 0 1px, transparent 1px 15px)">
+                <div style="position:absolute; left:4px; right:4px; top:60px; height:120px; padding:8px 10px; border-radius:8px; background:#f8fafc; border:1px solid #e2e8f0; border-left:3px solid #4f46e5; overflow:hidden; opacity:0.6">
+                  <div style="font-size:12px; font-weight:650; color:#0f172a">보고서 작성</div>
+                  <div style="font-size:11px; color:#475569; margin-top:4px">09:00–11:00 · 2h</div>
+                </div>
+                <div style="position:absolute; left:4px; right:4px; top:360px; height:90px; padding:8px 10px; border-radius:8px; background:#f8fafc; border:1px solid #e2e8f0; border-left:3px solid #4f46e5; overflow:hidden; opacity:0.6">
+                  <div style="font-size:12px; font-weight:650; color:#0f172a">팀 회의 준비</div>
+                  <div style="font-size:11px; color:#475569; margin-top:4px">14:00–15:30</div>
+                </div>
+              </div>
+              <!-- 화 (drop target) -->
+              <div style="position:relative; flex:1; height:840px; border-left:2px solid #4f46e5; border-right:2px solid #4f46e5; background-color:#f8fafc; background-image:repeating-linear-gradient(to bottom, #e2e8f0 0 1px, transparent 1px 60px), repeating-linear-gradient(to bottom, #eef2ff 0 1px, transparent 1px 15px)">
+                <div style="position:absolute; left:4px; right:4px; top:120px; height:120px; padding:8px 10px; border-radius:8px; background:#ffffff; border:1px solid #e2e8f0; border-left:3px solid #4f46e5; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#0f172a">API 설계 리뷰</div>
+                  <div style="font-size:11px; color:#475569; margin-top:4px">10:00–12:00 · 2h</div>
+                </div>
+                <!-- ghost -->
+                <div style="position:absolute; left:4px; right:4px; top:360px; height:90px; border-radius:8px; border:2px dashed #4f46e5; background:rgba(79,70,229,0.10); padding:8px 10px; box-sizing:border-box">
+                  <div style="font-size:12px; font-weight:650; color:#0f172a">보고서 초안 검토</div>
+                  <div style="font-size:11px; color:#4f46e5; font-weight:600; margin-top:4px">14:00–15:30 · 1h 30m</div>
+                  <div style="font-size:10px; color:#475569; margin-top:4px">드롭 위치 · 15분 스냅</div>
+                </div>
+                <div style="position:absolute; left:4px; right:4px; top:480px; height:60px; padding:8px 10px; border-radius:8px; background:#ffffff; border:1px solid #e2e8f0; border-left:3px solid #4f46e5; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#0f172a">고객 콜</div>
+                  <div style="font-size:11px; color:#475569; margin-top:4px">16:00–17:00 · 1h</div>
+                </div>
+                <sc-if value="{{ showGapGuides }}" hint-placeholder-val="{{ true }}">
+                  <div style="position:absolute; left:0; right:0; top:240px; height:120px; display:flex; align-items:center; justify-content:center; border-top:1px dashed #4f46e5; border-bottom:1px dashed #4f46e5; box-sizing:border-box">
+                    <span style="padding:2px 6px; border-radius:8px; background:#ffffff; border:1px solid #e2e8f0; font-size:10px; color:#475569">↕ 2h 00m 여유</span>
+                  </div>
+                  <div style="position:absolute; left:0; right:0; top:450px; height:30px; display:flex; align-items:center; justify-content:center; border-bottom:1px dashed #4f46e5; box-sizing:border-box">
+                    <span style="padding:1px 6px; border-radius:8px; background:#ffffff; border:1px solid #e2e8f0; font-size:10px; color:#475569">↕ 30m 여유</span>
+                  </div>
+                </sc-if>
+                <!-- dragged card -->
+                <div style="position:absolute; left:134px; top:344px; width:200px; padding:10px 12px; border-radius:8px; background:#ffffff; border:1px solid #4f46e5; box-shadow:0 12px 24px rgba(15,23,42,0.18); transform:rotate(-1.5deg); box-sizing:border-box; z-index:5">
+                  <div style="font-size:12px; font-weight:650; color:#0f172a; white-space:nowrap">보고서 초안 검토</div>
+                  <div style="display:flex; align-items:center; gap:6px; margin-top:6px; white-space:nowrap">
+                    <span style="display:inline-flex; align-items:center; gap:3px; height:18px; padding:0 6px; border-radius:8px; border:1px solid #b91c1c; color:#b91c1c; font-size:10px; font-weight:600; white-space:nowrap">▲ 높음</span>
+                    <span style="font-size:10px; color:#475569; white-space:nowrap">⏱ 1h 30m · 마감 8/31</span>
+                  </div>
+                  <div style="font-size:10px; color:#4f46e5; font-weight:600; margin-top:4px; white-space:nowrap">↖ 드롭하면 화요일 14:00 시작</div>
+                </div>
+              </div>
+              <!-- 수 -->
+              <div style="position:relative; flex:1; height:840px; background-image:repeating-linear-gradient(to bottom, #e2e8f0 0 1px, transparent 1px 60px), repeating-linear-gradient(to bottom, #f1f5f9 0 1px, transparent 1px 15px)">
+                <div style="position:absolute; left:4px; right:4px; top:30px; height:90px; padding:8px 10px; border-radius:8px; background:#f8fafc; border:1px solid #e2e8f0; border-left:3px solid #4f46e5; overflow:hidden; opacity:0.6">
+                  <div style="font-size:12px; font-weight:650; color:#0f172a">주간 계획 수립</div>
+                  <div style="font-size:11px; color:#475569; margin-top:4px">08:30–10:00</div>
+                </div>
+                <div style="position:absolute; left:4px; right:4px; top:420px; height:90px; padding:8px 10px; border-radius:8px; background:#f8fafc; border:1px solid #e2e8f0; border-left:3px solid #4f46e5; overflow:hidden; opacity:0.6">
+                  <div style="font-size:12px; font-weight:650; color:#0f172a">디자인 QA</div>
+                  <div style="font-size:11px; color:#475569; margin-top:4px">15:00–16:30</div>
+                </div>
+              </div>
+              <!-- 목 -->
+              <div style="position:relative; flex:1; height:840px; border-left:1px solid #e2e8f0; background-image:repeating-linear-gradient(to bottom, #e2e8f0 0 1px, transparent 1px 60px), repeating-linear-gradient(to bottom, #f1f5f9 0 1px, transparent 1px 15px)">
+                <div style="position:absolute; left:4px; right:4px; top:180px; height:120px; padding:8px 10px; border-radius:8px; background:#f8fafc; border:1px solid #e2e8f0; border-left:3px solid #4f46e5; overflow:hidden; opacity:0.6">
+                  <div style="font-size:12px; font-weight:650; color:#0f172a">채용 인터뷰</div>
+                  <div style="font-size:11px; color:#475569; margin-top:4px">11:00–13:00</div>
+                </div>
+              </div>
+              <!-- 금 -->
+              <div style="position:relative; flex:1; height:840px; border-left:1px solid #e2e8f0; background-image:repeating-linear-gradient(to bottom, #e2e8f0 0 1px, transparent 1px 60px), repeating-linear-gradient(to bottom, #f1f5f9 0 1px, transparent 1px 15px)">
+                <div style="position:absolute; left:4px; right:4px; top:90px; height:90px; padding:8px 10px; border-radius:8px; background:#f8fafc; border:1px solid #e2e8f0; border-left:3px solid #4f46e5; overflow:hidden; opacity:0.6">
+                  <div style="font-size:12px; font-weight:650; color:#0f172a">스프린트 회고</div>
+                  <div style="font-size:11px; color:#475569; margin-top:4px">09:30–11:00</div>
+                </div>
+                <div style="position:absolute; left:4px; right:4px; top:480px; height:60px; padding:8px 10px; border-radius:8px; background:#f8fafc; border:1px solid #e2e8f0; border-left:3px solid #4f46e5; overflow:hidden; opacity:0.6">
+                  <div style="font-size:12px; font-weight:650; color:#0f172a">1:1 미팅</div>
+                  <div style="font-size:11px; color:#475569; margin-top:4px">16:00–17:00</div>
+                </div>
+              </div>
+              <div style="position:relative; flex:1; height:840px; border-left:1px solid #e2e8f0; background-color:#f8fafc; background-image:repeating-linear-gradient(to bottom, #e2e8f0 0 1px, transparent 1px 60px)"></div>
+              <div style="position:relative; flex:1; height:840px; border-left:1px solid #e2e8f0; background-color:#f8fafc; background-image:repeating-linear-gradient(to bottom, #e2e8f0 0 1px, transparent 1px 60px)"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <sc-if value="{{ showAnnotations }}" hint-placeholder-val="{{ true }}">
+    <div style="width:340px; flex:0 0 340px; display:flex; flex-direction:column; gap:20px; padding:20px; background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; margin-top:34px">
+      <div style="font-size:13px; font-weight:650; color:#0f172a">1c 주석</div>
+      <div style="display:flex; flex-direction:column; gap:8px">
+        <div style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#475569">화면 요소</div>
+        <div style="font-size:12px; line-height:1.7; color:#0f172a">
+          <div>고스트 블록: 2px dashed accent + 시각 라벨. 소요시간(1h 30m)에 비례한 높이 90px.</div>
+          <div>대상 열 강조: 좌우 2px accent 보더 + raised 배경. 나머지 열 블록은 opacity 0.6.</div>
+          <div>간격 가이드: 위 블록과 2h, 아래 블록과 30m을 dashed 선 + 수치로 표기.</div>
+          <div>상단 가용 시간은 배치 후 예상값(11h 00m, −1h 30m)으로 미리 갱신.</div>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px">
+        <div style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#475569">키보드 조작</div>
+        <div style="font-size:12px; line-height:1.7; color:#0f172a">
+          <div><span style="font-family:ui-monospace, Menlo, monospace; color:#4f46e5">Space</span> 카드 집기 → 좌측 목록에 “이동 중” 자리 유지</div>
+          <div><span style="font-family:ui-monospace, Menlo, monospace; color:#4f46e5">← →</span> 요일 이동 · <span style="font-family:ui-monospace, Menlo, monospace; color:#4f46e5">↑ ↓</span> 15분 이동</div>
+          <div><span style="font-family:ui-monospace, Menlo, monospace; color:#4f46e5">Shift+↓</span> 길이 +15분 · <span style="font-family:ui-monospace, Menlo, monospace; color:#4f46e5">Shift+↑</span> −15분</div>
+          <div><span style="font-family:ui-monospace, Menlo, monospace; color:#4f46e5">Enter</span> 이 위치로 확정 · <span style="font-family:ui-monospace, Menlo, monospace; color:#4f46e5">Esc</span> 취소, 카드는 목록 원위치</div>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px">
+        <div style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#475569">스크린리더 (aria-live)</div>
+        <div style="font-size:12px; line-height:1.7; color:#0f172a">
+          <div><span style="font-family:ui-monospace, Menlo, monospace">polite</span> — 이동할 때마다: “화요일 오후 2시, 1시간 30분. 앞뒤 2시간·30분 비어 있음. 놓을 수 있습니다.”</div>
+          <div><span style="font-family:ui-monospace, Menlo, monospace">polite</span> — 길이 조절: “1시간 45분으로 변경.”</div>
+          <div><span style="font-family:ui-monospace, Menlo, monospace">polite</span> — 잔여 시간 변경: “이번 주 남은 가용 시간 11시간.” (연속 이동 시 300ms 디바운스, 마지막 값만 낭독)</div>
+          <div><span style="font-family:ui-monospace, Menlo, monospace">polite</span> — 취소: “배치를 취소했습니다. 보고서 초안 검토, 미배치 목록으로 돌아감.”</div>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px">
+        <div style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#475569">Radix 매핑</div>
+        <div style="font-size:12px; line-height:1.7; color:#0f172a">드래그는 Radix 밖(포인터 이벤트 + 커스텀 훅). 확정 결과 알림 = <span style="font-family:ui-monospace, Menlo, monospace">Toast</span>(“화요일 14:00에 배치됨 · 실행 취소”).</div>
+      </div>
+    </div>
+    </sc-if>
+  </div>
+
+  <!-- ============ 1d 겹침 경고 (다크) ============ -->
+  <div id="1d" style="display:flex; gap:32px; align-items:flex-start">
+    <div style="display:flex; flex-direction:column; gap:12px">
+      <div style="display:flex; align-items:center; gap:10px">
+        <span style="display:inline-flex; align-items:center; height:24px; padding:0 10px; border-radius:8px; background:#0f172a; color:#ffffff; font-size:12px; font-weight:650; letter-spacing:0.04em">1d</span>
+        <span style="font-size:14px; color:#475569">겹침 경고 · 다크 · 월요일 09:30 드롭 시도</span>
+      </div>
+
+      <div style="width:1440px; background:#0f172a; border:1px solid #334155; border-radius:8px; overflow:hidden">
+        <div style="display:flex; align-items:center; justify-content:space-between; height:64px; padding:0 24px; border-bottom:1px solid #334155">
+          <div style="display:flex; align-items:center; gap:12px">
+            <div style="display:flex; gap:4px">
+              <div style="display:flex; align-items:center; justify-content:center; width:32px; height:32px; border:1px solid #334155; border-radius:8px; background:#1e293b; color:#f1f5f9; font-size:14px">‹</div>
+              <div style="display:flex; align-items:center; justify-content:center; width:32px; height:32px; border:1px solid #334155; border-radius:8px; background:#1e293b; color:#f1f5f9; font-size:14px">›</div>
+            </div>
+            <div style="font-size:17px; font-weight:650; color:#f1f5f9">2026년 8월 31일 – 9월 6일</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px">
+            <div style="display:flex; align-items:center; gap:8px; height:32px; padding:0 12px; border:1px solid #fca5a5; border-radius:8px; background:#1e293b">
+              <span style="font-size:13px; color:#fca5a5">⚠</span>
+              <span style="font-size:13px; font-weight:650; color:#fca5a5">겹침 1건</span>
+              <span style="font-size:13px; color:#cbd5e1">· 확정 전</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; height:32px; padding:0 12px; border:1px solid #334155; border-radius:8px; background:#1e293b">
+              <span style="font-size:13px; color:#f1f5f9">⏱</span>
+              <span style="font-size:13px; color:#cbd5e1">남은 가용 시간</span>
+              <span style="font-size:13px; font-weight:650; color:#86efac">12h 30m</span>
+              <span style="font-size:12px; color:#cbd5e1">(변동 없음)</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:stretch">
+          <div style="width:320px; flex:0 0 320px; border-right:1px solid #334155; background:#1e293b; padding:20px 16px; display:flex; flex-direction:column; gap:12px">
+            <div style="display:flex; align-items:baseline; justify-content:space-between">
+              <div style="font-size:14px; font-weight:650; color:#f1f5f9">미배치 할 일</div>
+              <div style="font-size:12px; color:#cbd5e1">4개 · 4h 15m</div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px">
+              <div style="display:flex; align-items:center; justify-content:center; height:74px; border:2px dashed #818cf8; border-radius:8px; background:rgba(129,140,248,0.10); font-size:12px; color:#818cf8">‘보고서 초안 검토’ 이동 중</div>
+              <div style="display:flex; flex-direction:column; gap:8px; padding:12px; background:#0f172a; border:1px solid #334155; border-radius:8px">
+                <div style="font-size:14px; font-weight:600; color:#f1f5f9">고객 피드백 정리</div>
+                <div style="display:flex; align-items:center; gap:8px"><span style="display:inline-flex; align-items:center; gap:4px; height:22px; padding:0 8px; border-radius:8px; border:1px solid #fca5a5; color:#fca5a5; font-size:11px; font-weight:600">▲ 높음</span><span style="font-size:12px; color:#cbd5e1">⏱ 1h 00m</span></div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px; padding:12px; background:#0f172a; border:1px solid #334155; border-radius:8px">
+                <div style="font-size:14px; font-weight:600; color:#f1f5f9">스프린트 백로그 정리</div>
+                <div style="display:flex; align-items:center; gap:8px"><span style="display:inline-flex; align-items:center; gap:4px; height:22px; padding:0 8px; border-radius:8px; border:1px solid #fcd34d; color:#fcd34d; font-size:11px; font-weight:600">● 보통</span><span style="font-size:12px; color:#cbd5e1">⏱ 45m</span></div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px; padding:12px; background:#0f172a; border:1px solid #334155; border-radius:8px">
+                <div style="font-size:14px; font-weight:600; color:#f1f5f9">디자인 시스템 문서화</div>
+                <div style="display:flex; align-items:center; gap:8px"><span style="display:inline-flex; align-items:center; gap:4px; height:22px; padding:0 8px; border-radius:8px; border:1px solid #fcd34d; color:#fcd34d; font-size:11px; font-weight:600">● 보통</span><span style="font-size:12px; color:#cbd5e1">⏱ 2h 00m</span></div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px; padding:12px; background:#0f172a; border:1px solid #334155; border-radius:8px">
+                <div style="font-size:14px; font-weight:600; color:#f1f5f9">채용 공고 문구 수정</div>
+                <div style="display:flex; align-items:center; gap:8px"><span style="display:inline-flex; align-items:center; gap:4px; height:22px; padding:0 8px; border-radius:8px; border:1px solid #cbd5e1; color:#cbd5e1; font-size:11px; font-weight:600">▼ 낮음</span><span style="font-size:12px; color:#cbd5e1">⏱ 30m</span></div>
+              </div>
+            </div>
+            <div style="margin-top:auto; display:flex; flex-direction:column; gap:6px; padding:10px 12px; border:1px solid #334155; border-radius:8px; background:#0f172a">
+              <div style="font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:#cbd5e1">aria-live 영역 (시각적 표시용)</div>
+              <div style="font-size:11px; line-height:1.6; color:#fca5a5">assertive: “겹침. 이 시간대에 보고서 작성이 있습니다. 오전 9시부터 11시까지.”</div>
+            </div>
+          </div>
+
+          <div style="flex:1; display:flex; flex-direction:column">
+            <div style="display:flex; border-bottom:1px solid #334155">
+              <div style="width:56px; flex:0 0 56px"></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:2px solid #fca5a5; border-right:2px solid #fca5a5; background:#1e293b"><span style="font-size:12px; color:#fca5a5; font-weight:600">월</span><span style="font-size:15px; font-weight:650; color:#fca5a5">31</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0"><span style="font-size:12px; color:#cbd5e1">화</span><span style="font-size:15px; font-weight:650; color:#f1f5f9">1</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:1px solid #334155"><span style="font-size:12px; color:#cbd5e1">수</span><span style="font-size:15px; font-weight:650; color:#f1f5f9">2</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:1px solid #334155"><span style="font-size:12px; color:#cbd5e1">목</span><span style="font-size:15px; font-weight:650; color:#f1f5f9">3</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:1px solid #334155"><span style="font-size:12px; color:#cbd5e1">금</span><span style="font-size:15px; font-weight:650; color:#f1f5f9">4</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:1px solid #334155; background:#1e293b"><span style="font-size:12px; color:#cbd5e1">토</span><span style="font-size:15px; font-weight:650; color:#cbd5e1">5</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 0; border-left:1px solid #334155; background:#1e293b"><span style="font-size:12px; color:#cbd5e1">일</span><span style="font-size:15px; font-weight:650; color:#cbd5e1">6</span></div>
+            </div>
+
+            <div style="display:flex">
+              <div style="width:56px; flex:0 0 56px; display:flex; flex-direction:column; padding-top:1px">
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">08:00</div>
+                <div style="height:60px; font-size:11px; font-weight:650; color:#fca5a5; text-align:right; padding-right:8px; transform:translateY(-6px)">09:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">10:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">11:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">12:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">13:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">14:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">15:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">16:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">17:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">18:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">19:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">20:00</div>
+                <div style="height:60px; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">21:00</div>
+                <div style="height:0; font-size:11px; color:#cbd5e1; text-align:right; padding-right:8px; transform:translateY(-6px)">22:00</div>
+              </div>
+              <!-- 월 conflict column -->
+              <div style="position:relative; flex:1; height:840px; border-left:2px solid #fca5a5; border-right:2px solid #fca5a5; background-color:#1e293b; background-image:repeating-linear-gradient(to bottom, #334155 0 1px, transparent 1px 60px); z-index:3">
+                <!-- overlap hatch marker -->
+                <div style="position:absolute; left:0; right:0; top:90px; height:90px; background-image:repeating-linear-gradient(45deg, rgba(252,165,165,0.22) 0 6px, transparent 6px 12px); border-top:1px solid #fca5a5; border-bottom:1px solid #fca5a5; pointer-events:none"></div>
+                <!-- existing conflicting block -->
+                <div style="position:absolute; left:4px; right:4px; top:60px; height:120px; padding:8px 10px; border-radius:8px; background:#1e293b; border:2px solid #fca5a5; border-left:4px solid #fca5a5; overflow:hidden; box-sizing:border-box">
+                  <div style="display:flex; align-items:center; gap:4px; white-space:nowrap">
+                    <span style="font-size:11px; color:#fca5a5">⚠</span>
+                    <span style="font-size:11px; font-weight:650; color:#fca5a5">겹침 · 기존 일정</span>
+                  </div>
+                  <div style="font-size:12px; font-weight:650; color:#f1f5f9; margin-top:4px; white-space:nowrap">보고서 작성</div>
+                  <div style="font-size:11px; color:#cbd5e1; margin-top:2px; white-space:nowrap">09:00–11:00 · 2h</div>
+                </div>
+                <!-- new block being dropped, overlaid -->
+                <div style="position:absolute; left:30px; top:96px; width:196px; height:78px; padding:8px 10px; border-radius:8px; background:#0f172a; border:2px dashed #fca5a5; box-sizing:border-box; box-shadow:0 10px 20px rgba(0,0,0,0.55); z-index:4">
+                  <div style="display:flex; align-items:center; gap:4px; white-space:nowrap">
+                    <span style="font-size:11px; color:#fca5a5">⚠</span>
+                    <span style="font-size:11px; font-weight:650; color:#fca5a5">놓을 수 없음 · 새 블록</span>
+                  </div>
+                  <div style="font-size:12px; font-weight:650; color:#f1f5f9; margin-top:4px; white-space:nowrap">보고서 초안 검토</div>
+                  <div style="font-size:11px; color:#f1f5f9; margin-top:2px; white-space:nowrap">09:30–11:00 · 1h 30m</div>
+                </div>
+                <div style="position:absolute; left:6px; top:186px; padding:2px 6px; border-radius:8px; background:#0f172a; border:1px solid #fca5a5; font-size:10px; color:#fca5a5; white-space:nowrap">겹치는 구간 1h 30m</div>
+                <div style="position:absolute; left:4px; right:4px; top:360px; height:90px; padding:8px 10px; border-radius:8px; background:#1e293b; border:1px solid #334155; border-left:3px solid #818cf8; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#f1f5f9">팀 회의 준비</div>
+                  <div style="font-size:11px; color:#cbd5e1; margin-top:4px">14:00–15:30</div>
+                </div>
+              </div>
+              <!-- 화 with warning popover -->
+              <div style="position:relative; flex:1; height:840px; background-image:repeating-linear-gradient(to bottom, #334155 0 1px, transparent 1px 60px), repeating-linear-gradient(to bottom, #1e293b 0 1px, transparent 1px 15px)">
+                <!-- popover anchored to conflict -->
+                <div style="position:absolute; left:56px; top:212px; width:296px; padding:14px; border-radius:8px; background:#1e293b; border:1px solid #fca5a5; box-shadow:0 16px 32px rgba(0,0,0,0.5); display:flex; flex-direction:column; gap:10px; z-index:2">
+                  <div style="display:flex; align-items:center; gap:8px">
+                    <span style="display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:8px; border:1px solid #fca5a5; color:#fca5a5; font-size:11px">⚠</span>
+                    <span style="font-size:13px; font-weight:650; color:#fca5a5">겹침 경고</span>
+                  </div>
+                  <div style="font-size:13px; line-height:1.6; color:#f1f5f9">이 시간대에 ‘보고서 작성’이 있습니다.</div>
+                  <div style="font-size:12px; line-height:1.6; color:#cbd5e1">기존: 월 09:00–11:00 (2h)<br>새 블록: 월 09:30–11:00 (1h 30m)<br>겹치는 구간: 1h 30m</div>
+                  <div style="display:flex; gap:8px; padding-top:2px">
+                    <div style="position:relative; display:flex; align-items:center; justify-content:center; height:32px; padding:0 12px; border-radius:8px; background:#818cf8; color:#0f172a; font-size:12px; font-weight:650">11:00로 밀어 배치
+                      <sc-if value="{{ showFocusRings }}" hint-placeholder-val="{{ true }}"><div style="position:absolute; inset:-3px; border-radius:10px; outline:2px solid #818cf8; outline-offset:2px; pointer-events:none"></div></sc-if>
+                    </div>
+                    <div style="display:flex; align-items:center; justify-content:center; height:32px; padding:0 12px; border-radius:8px; background:#1e293b; border:1px solid #334155; color:#f1f5f9; font-size:12px">겹쳐 두기</div>
+                    <div style="display:flex; align-items:center; justify-content:center; height:32px; padding:0 10px; border-radius:8px; color:#cbd5e1; font-size:12px">취소</div>
+                  </div>
+                  <div style="font-size:11px; color:#cbd5e1; border-top:1px solid #334155; padding-top:8px"><span style="font-family:ui-monospace, Menlo, monospace; color:#818cf8">Enter</span> 밀어 배치 · <span style="font-family:ui-monospace, Menlo, monospace; color:#818cf8">Esc</span> 취소</div>
+                </div>
+                <div style="position:absolute; left:4px; right:4px; top:120px; height:120px; padding:8px 10px; border-radius:8px; background:#1e293b; border:1px solid #334155; border-left:3px solid #818cf8; overflow:hidden; opacity:0.35">
+                  <div style="font-size:12px; font-weight:650; color:#f1f5f9">API 설계 리뷰</div>
+                </div>
+                <div style="position:absolute; left:4px; right:4px; top:480px; height:60px; padding:8px 10px; border-radius:8px; background:#1e293b; border:1px solid #334155; border-left:3px solid #818cf8; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#f1f5f9">고객 콜</div>
+                  <div style="font-size:11px; color:#cbd5e1; margin-top:4px">16:00–17:00</div>
+                </div>
+              </div>
+              <div style="position:relative; flex:1; height:840px; border-left:1px solid #334155; background-image:repeating-linear-gradient(to bottom, #334155 0 1px, transparent 1px 60px), repeating-linear-gradient(to bottom, #1e293b 0 1px, transparent 1px 15px)">
+                <div style="position:absolute; left:4px; right:4px; top:30px; height:90px; padding:8px 10px; border-radius:8px; background:#1e293b; border:1px solid #334155; border-left:3px solid #818cf8; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#f1f5f9">주간 계획 수립</div>
+                  <div style="font-size:11px; color:#cbd5e1; margin-top:4px">08:30–10:00</div>
+                </div>
+                <div style="position:absolute; left:4px; right:4px; top:420px; height:90px; padding:8px 10px; border-radius:8px; background:#1e293b; border:1px solid #334155; border-left:3px solid #818cf8; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#f1f5f9">디자인 QA</div>
+                  <div style="font-size:11px; color:#cbd5e1; margin-top:4px">15:00–16:30</div>
+                </div>
+              </div>
+              <div style="position:relative; flex:1; height:840px; border-left:1px solid #334155; background-image:repeating-linear-gradient(to bottom, #334155 0 1px, transparent 1px 60px), repeating-linear-gradient(to bottom, #1e293b 0 1px, transparent 1px 15px)">
+                <div style="position:absolute; left:4px; right:4px; top:180px; height:120px; padding:8px 10px; border-radius:8px; background:#1e293b; border:1px solid #334155; border-left:3px solid #818cf8; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#f1f5f9">채용 인터뷰</div>
+                  <div style="font-size:11px; color:#cbd5e1; margin-top:4px">11:00–13:00</div>
+                </div>
+              </div>
+              <div style="position:relative; flex:1; height:840px; border-left:1px solid #334155; background-image:repeating-linear-gradient(to bottom, #334155 0 1px, transparent 1px 60px), repeating-linear-gradient(to bottom, #1e293b 0 1px, transparent 1px 15px)">
+                <div style="position:absolute; left:4px; right:4px; top:90px; height:90px; padding:8px 10px; border-radius:8px; background:#1e293b; border:1px solid #334155; border-left:3px solid #818cf8; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#f1f5f9">스프린트 회고</div>
+                  <div style="font-size:11px; color:#cbd5e1; margin-top:4px">09:30–11:00</div>
+                </div>
+                <div style="position:absolute; left:4px; right:4px; top:480px; height:60px; padding:8px 10px; border-radius:8px; background:#1e293b; border:1px solid #334155; border-left:3px solid #818cf8; overflow:hidden">
+                  <div style="font-size:12px; font-weight:650; color:#f1f5f9">1:1 미팅</div>
+                  <div style="font-size:11px; color:#cbd5e1; margin-top:4px">16:00–17:00</div>
+                </div>
+              </div>
+              <div style="position:relative; flex:1; height:840px; border-left:1px solid #334155; background-color:#1e293b; background-image:repeating-linear-gradient(to bottom, #334155 0 1px, transparent 1px 60px)"></div>
+              <div style="position:relative; flex:1; height:840px; border-left:1px solid #334155; background-color:#1e293b; background-image:repeating-linear-gradient(to bottom, #334155 0 1px, transparent 1px 60px)"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <sc-if value="{{ showAnnotations }}" hint-placeholder-val="{{ true }}">
+    <div style="width:340px; flex:0 0 340px; display:flex; flex-direction:column; gap:20px; padding:20px; background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; margin-top:34px">
+      <div style="font-size:13px; font-weight:650; color:#0f172a">1d 주석</div>
+      <div style="display:flex; flex-direction:column; gap:8px">
+        <div style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#475569">3중 인코딩 (색 + 아이콘 + 텍스트)</div>
+        <div style="font-size:12px; line-height:1.7; color:#0f172a">
+          <div>색: danger #fca5a5 보더·라벨 / 아이콘: ⚠ / 텍스트: “겹침”, “놓을 수 없음”, “이 시간대에 ‘보고서 작성’이 있습니다”</div>
+          <div>추가 비색 단서: 겹치는 구간 45° 사선 해칭 + “겹치는 구간 1h 30m” 수치, 새 블록은 dashed 보더.</div>
+          <div>충돌 블록과 새 블록을 좌우로 나눠 둘 다 보이게 유지(가리지 않음).</div>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px">
+        <div style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#475569">키보드 조작</div>
+        <div style="font-size:12px; line-height:1.7; color:#0f172a">
+          <div>경고 상태에서도 이동 가능: <span style="font-family:ui-monospace, Menlo, monospace; color:#4f46e5">↑ ↓</span> 15분, <span style="font-family:ui-monospace, Menlo, monospace; color:#4f46e5">← →</span> 요일 — 겹침이 해소되면 경고 즉시 사라짐</div>
+          <div><span style="font-family:ui-monospace, Menlo, monospace; color:#4f46e5">Shift+↑</span>로 길이를 줄여 빈 구간에 맞출 수 있음</div>
+          <div><span style="font-family:ui-monospace, Menlo, monospace; color:#4f46e5">Enter</span> 기본 동작 = “11:00로 밀어 배치” · <span style="font-family:ui-monospace, Menlo, monospace; color:#4f46e5">Tab</span> 세 버튼 순회 · <span style="font-family:ui-monospace, Menlo, monospace; color:#4f46e5">Esc</span> 취소</div>
+          <div>Popover 열려 있는 동안 포커스는 Popover 내부에 갇힘(Radix 기본), 닫히면 원래 블록으로 복귀</div>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px">
+        <div style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#475569">스크린리더 (aria-live)</div>
+        <div style="font-size:12px; line-height:1.7; color:#0f172a">
+          <div><span style="font-family:ui-monospace, Menlo, monospace">assertive</span> — 겹침 발생 시: “겹침. 이 시간대에 보고서 작성이 있습니다. 오전 9시부터 11시까지. 1시간 30분 겹침. 밀어 배치, 겹쳐 두기, 취소 중 선택하세요.”</div>
+          <div><span style="font-family:ui-monospace, Menlo, monospace">polite</span> — 겹침 해소: “겹침 없음. 월요일 오전 11시부터 12시 30분까지 놓을 수 있습니다.”</div>
+          <div><span style="font-family:ui-monospace, Menlo, monospace">polite</span> — 잔여 시간 변경: “이번 주 남은 가용 시간 11시간.” 겹침 상태에서는 확정 전이므로 낭독하지 않음(현재 12h 30m 유지).</div>
+          <div>같은 문구 반복 시 재낭독되도록 메시지 끝에 보이지 않는 카운터 유지.</div>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px">
+        <div style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#475569">Radix 매핑</div>
+        <div style="font-size:12px; line-height:1.7; color:#0f172a">경고 = <span style="font-family:ui-monospace, Menlo, monospace">Popover</span>(블록 앵커, <span style="font-family:ui-monospace, Menlo, monospace">role="alertdialog"</span> 성격 시 <span style="font-family:ui-monospace, Menlo, monospace">Dialog</span>로 승격) / 확정 후 결과 = <span style="font-family:ui-monospace, Menlo, monospace">Toast</span> + 실행 취소 / 반복 규칙 편집 = <span style="font-family:ui-monospace, Menlo, monospace">Dialog</span> + <span style="font-family:ui-monospace, Menlo, monospace">Select</span>.</div>
+      </div>
+    </div>
+    </sc-if>
+  </div>
+
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showAnnotations&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;주석&quot;},&quot;showFocusRings&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;접근성&quot;},&quot;showGapGuides&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;드래그&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      showAnnotations: this.props.showAnnotations ?? true,
+      showFocusRings: this.props.showFocusRings ?? true,
+      showGapGuides: this.props.showGapGuides ?? true,
+    };
+  }
+}
+</script>
+</body>
+</html>

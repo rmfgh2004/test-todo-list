@@ -15,7 +15,7 @@ This document records the choices that document left undecided, and the constrai
 | UI state | React local state | No global store is justified; the server is the source of truth. |
 | Styling | CSS Modules + global design tokens | Approved baseline; supports the light/dark variants in the design screens with no runtime CSS-in-JS cost. |
 | Icons | Lucide React | Approved baseline; icons ship in the bundle, never from a CDN. |
-| Drag and drop | dnd-kit | Approved baseline; provides pointer and keyboard sensors, which NFR-004 requires. |
+| Drag and drop | dnd-kit | Approved baseline; provides pointer and keyboard sensors, which NFR-004 requires. **Remediation (Tempo Phase 1, 2026-09-03)**: the shipped code used native HTML5 `draggable`/`onDrop` instead, a drift from this decision rather than a re-decision; Phase 1 replaces it with dnd-kit's sensors. |
 
 ## 2. Contract and Transport (decided here)
 

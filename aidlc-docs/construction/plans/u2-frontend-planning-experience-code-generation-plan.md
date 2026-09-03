@@ -22,7 +22,7 @@ frontend-components), U2 NFR requirements (nfr-requirements, tech-stack-decision
 - **Code location**: `frontend/` at the workspace root (greenfield multi-unit layout from
   `unit-of-work.md`). No application code is ever written under `aidlc-docs/`.
 - **Documentation location**: `aidlc-docs/construction/u2-frontend-planning-experience/code/`
-- **Owns**: F-C01~F-C09, F-N01~F-N09, S-F01~S-F04
+- **Owns**: F-C01~~F-C09, F-N01~~F-N09, S-F01~S-F04
 - **Depends on**: U1 over local HTTP; the committed OpenAPI contract is the only interface
 - **Owns no persistence**: every authoritative decision (overlap, version, durability) stays in U1
 - **Runtime present**: Node v26.8.1, npm 11.19.0
@@ -136,116 +136,145 @@ code batch, as it did for U1.
 - [x] Implement the geometry and time helpers as pure functions with no DOM, cache or network access,
       each carrying its stable FR/UR/PBT ID in a docstring.
 - [x] Make Step 3 tests pass, add a fixed regression example for every shrunk counterexample, run the
-      security review, mark Steps 3~4.
-      **Done.** 20 Step 3~4 tests pass with fixed seed `20260901`; shrinking remains enabled and no
+      security review, mark Steps 3~~4.
+      **Done.** 20 Step 3~~4 tests pass with fixed seed `20260901`; shrinking remains enabled and no
       counterexample was found, so no new shrunk regression case was required. Full `npm run verify`
       passes with 21 tests, 96.29% line and 88.76% branch coverage, and a 58.0KB gzip bundle.
 
 ### Step 5 - Transport Tests First (client, errors, mocks)
 
-- [ ] Create MSW handlers typed from the generated contract covering success plus 400 field errors,
+- [x] Create MSW handlers typed from the generated contract covering success plus 400 field errors,
       404, 409 conflict, 409 stale, 429 with `Retry-After`, 5xx and transport loss (F-N08).
-- [ ] Create failing tests for the fetch wrapper (request-ID generation and propagation, response
+- [x] Create failing tests for the fetch wrapper (request-ID generation and propagation, response
       validation, allowlisted query serialization with out-of-range fallback) and for the error
       normalizer's seven `SafeApiError` kinds including `unknown` degradation (F-N05, SECURITY-05).
-- [ ] Confirm the failing state.
+- [x] Confirm the failing state.
 
 ### Step 6 - API Client, Error Normalizer and Connectivity Monitor
 
-- [ ] Implement `frontend/src/shared/api/` — client, normalizer, connectivity state from consecutive
+- [x] Implement `frontend/src/shared/api/` — client, normalizer, connectivity state from consecutive
       transport failures with the Q2 interval, and the mock installer gated on `VITE_USE_MOCK=1`
       (F-C08, F-N03, F-N05, F-N08).
-- [ ] Assert that only transport failures raise `disconnected`; any HTTP status routes normally.
-- [ ] Add the production-build check that fails if the mock module is reachable from the bundle.
-- [ ] Make Step 5 tests pass, run the security review, mark Steps 5~6.
+- [x] Assert that only transport failures raise `disconnected`; any HTTP status routes normally.
+- [x] Add the production-build check that fails if the mock module is reachable from the bundle.
+- [x] Make Step 5 tests pass, run the security review, mark Steps 5~6.
+      **Done.** The five Step 5 suites first failed because their implementation modules did not
+      exist. After Step 6, 27 focused tests pass. The full gate passes with 62 tests, 93.80% line and
+      82.96% branch coverage, contract drift clean and a 58.0KB gzip production bundle. The existing
+      two-part SECURITY-09 build guard confirms neither the mock worker file nor mock module ships.
 
 ### Step 7 - Cache and Mutation Coordinator Tests First
 
-- [ ] Create failing tests for cache keys (`['week', weekStart]`, `['tasks', query]`, `['task', id]`),
+- [x] Create failing tests for cache keys (`['week', weekStart]`, `['tasks', query]`, `['task', id]`),
       scoped invalidation including the cross-week move, bounded query retry (max 2) and no automatic
       mutation retry (F-N02).
-- [ ] Create failing tests for snapshot-and-rollback: snapshot before optimistic write, rollback
+- [x] Create failing tests for snapshot-and-rollback: snapshot before optimistic write, rollback
       completes before the conflict dialog renders, success replaces rather than merges, delete is
       never optimistic, single-flight per task, and the S-F03 state machine transitions (F-N04).
-- [ ] Confirm the failing state.
+- [x] Confirm the failing state.
 
 ### Step 8 - Cache Policy and Mutation Coordinator
 
-- [ ] Implement the query client configuration and the mutation coordinator with `expectedVersion`
+- [x] Implement the query client configuration and the mutation coordinator with `expectedVersion`
       propagation, snapshot rollback and the single-flight guard.
-- [ ] Make Step 7 tests pass, run the security review, mark Steps 7~8.
+- [x] Make Step 7 tests pass, run the security review, mark Steps 7~8.
+      **Done.** Both Step 7 suites failed first because the cache and mutation coordinator modules
+      did not exist. Nine focused tests and the 71-test full suite pass. Coverage is 93.05% lines and
+      81.27% branches; contract drift and the 58.0KB gzip production bundle gates remain clean.
 
 ### Step 9 - Design Tokens, Shell and Feedback Tests First
 
-- [ ] Create failing tests for the theme root (system default, persisted manual override, no component
+- [x] Create failing tests for the theme root (system default, persisted manual override, no component
       reading the theme), the responsive breakpoint, the route error boundaries (fallback shows the
       request ID, never a stack trace), the two live regions with exactly one announcement per
       transition, and the connectivity banner with mutating controls disabled (F-N01, F-N06, F-C01,
       F-C09).
-- [ ] Confirm the failing state.
+- [x] Confirm the failing state.
 
 ### Step 10 - Tokens, Application Shell and Accessible Feedback
 
-- [ ] Create the light/dark token files derived per the Q1 answer, the shell layout, navigation,
+- [x] Create the light/dark token files derived per the Q1 answer, the shell layout, navigation,
       theme toggle, skeleton/empty/error surfaces, toasts, copyable request ID and the
       `Retry-After`-gated retry control.
-- [ ] Make Step 9 tests pass, run the axe integration on both themes, run the security review, mark
+- [x] Make Step 9 tests pass, run the axe integration on both themes, run the security review, mark
       Steps 9~10.
+      **Done.** All 15 approved PNG inputs were inspected. The three Step 9 suites failed first on
+      missing theme, layout and feedback modules. Thirteen focused tests and the 83-test full suite
+      pass; light/dark axe checks report no serious or critical violations. Coverage is 93.29% lines
+      and 82.14% branches. The shell is visually verified in real Chromium at 1440x900 and 320x800,
+      and the production bundle is 64.3KB gzip.
 
 ### Step 11 - Feature Slice Tests First (US-001~US-009)
 
-- [ ] Create failing component tests per slice under `frontend/src/features/`:
+- [x] Create failing component tests per slice under `frontend/src/features/`:
       timetable (F-C02 grid, capacity indicator, week navigation), backlog (F-C03), task editor
       (F-C04 create/update/delete with confirm and rollback), scheduling interaction (F-C05 pointer,
       keyboard and date-time form converging on one `SlotProposal`), conflict resolution (F-C06
       comparison, choice, focus restoration) and task list (F-C07 URL-driven filters, paging, empty
       state).
-- [ ] Assert render-count stability on the 56x7 grid during drag (NFR-005) and that out-of-scope
+- [x] Assert render-count stability on the 56x7 grid during drag (NFR-005) and that out-of-scope
       controls are absent rather than disabled (UR-070~072).
-- [ ] Confirm the failing state.
+- [x] Confirm the failing state.
 
 ### Step 12 - Feature Slice Implementation
 
-- [ ] Implement each slice with its own query/mutation hooks; UI components never import the API
+- [x] Implement each slice with its own query/mutation hooks; UI components never import the API
       client.
-- [ ] Implement UR-001~UR-072 client mirrors as defensive prediction only — a contradicting server
+- [x] Implement UR-001~UR-072 client mirrors as defensive prediction only — a contradicting server
       response always wins.
-- [ ] Make Step 11 tests pass, refactor, run the security review, mark Steps 11~12.
+- [x] Make Step 11 tests pass, refactor, run the security review, mark Steps 11~12.
+      **Done.** Six feature suites failed first because the slice modules did not exist. Timetable,
+      backlog, editor, scheduling, conflict and URL-list components now connect through feature hooks
+      to the generated-contract transport. Three live integration journeys cover create/update/delete,
+      conflict rollback and candidate acceptance, and completion. The 98-test full gate passes at
+      90.51% lines, 81.85% branches and 85.27% functions; contract drift is clean and the production
+      bundle is 84.2KB gzip. U1's 150-test regression suite also passes.
 
 ### Step 13 - E2E, Accessibility, Capacity and Supply-Chain Gates
 
-- [ ] Add Playwright desktop and 320px journeys against a real U1 per the Q3 answer, covering
+- [x] Add Playwright desktop and 320px journeys against a real U1 per the Q3 answer, covering
       CP-02~CP-05: create, schedule by drag, schedule by keyboard, conflict resolve, unschedule,
       complete, list filtering, and backend-restart error feedback.
-- [ ] Add the `@axe-core/playwright` scans (serious/critical fail the build), the 250KB gzip bundle
+- [x] Add the `@axe-core/playwright` scans (serious/critical fail the build), the 250KB gzip bundle
       ceiling as a build gate, the `test:capacity` 1,000-task render measurement, `npm audit` and the
       CycloneDX SBOM.
-- [ ] Run `npm run verify` and `npm run test:e2e`; resolve every failure without lowering a threshold.
-- [ ] Run the full SECURITY-01~15 checklist for U2, mark Step 13.
+- [x] Run `npm run verify` and `npm run test:e2e`; resolve every failure without lowering a threshold.
+- [x] Run the full SECURITY-01~15 checklist for U2, mark Step 13.
+      **Done.** Playwright starts/stops real U1 and passes 10/10 desktop/320px journeys, including
+      expanded axe scans of primary and modal surfaces, one-request/under-2-second checks and
+      transport-loss recovery. Missing arrow navigation and modal focus containment were first
+      reproduced by three failing tests and fixed. The final 101-test gate passes at 89.32% lines,
+      82.54% branches and 83.33% functions; capacity is 120ms/300ms, gzip is 85.0KB/250KB,
+      `npm audit` reports 0 vulnerabilities and the CycloneDX 1.6 SBOM contains 454 components.
+      A follow-up user request enabled successful-run WebM recording in the Git-ignored
+      `frontend/test-results/` directory; the recorded rerun also passes 10/10.
 
 ### Step 14 - Documentation and U2 Evidence
 
-- [ ] Create `frontend/README.md` covering install, dev with and without `VITE_USE_MOCK`, contract
+- [x] Create `frontend/README.md` covering install, dev with and without `VITE_USE_MOCK`, contract
       regeneration, the verify/e2e/capacity commands and the U1 dependency.
-- [ ] Create `aidlc-docs/construction/u2-frontend-planning-experience/code/code-summary.md`,
+- [x] Create `aidlc-docs/construction/u2-frontend-planning-experience/code/code-summary.md`,
       `test-summary.md`, `traceability.md` and `security-review.md`.
-- [ ] Verify no hand-written transport types, no duplicate files, no unchecked plan item and no
+- [x] Verify no hand-written transport types, no duplicate files, no unchecked plan item and no
       unresolved applicable checklist item; mark Step 14.
+      **Done.** README and final code/test/traceability/security evidence are present. The duplicate
+      scan is empty; application wire types alias only generated OpenAPI schemas; all applicable
+      security and partial-PBT items pass. No Code Generation plan checkbox remains open.
 
 ## Story Coverage
 
-| Story | Steps |
-|---|---|
-| US-001 이번 주 계획 확인 | 3, 4, 7, 8, 11, 12, 13 |
-| US-002 할 일 빠르게 기록 | 5, 6, 11, 12, 13 |
-| US-003 할 일 내용 유지보수 | 7, 8, 11, 12, 13 |
-| US-004 할 일을 실제 시간에 배치 | 3, 4, 11, 12, 13 |
-| US-005 충돌을 이해하고 해결 | 7, 8, 11, 12, 13 |
-| US-006 계획에서 다시 빼기 | 11, 12, 13 |
-| US-007 실행 완료 기록 | 7, 8, 11, 12, 13 |
-| US-008 목록으로 누락 점검 | 11, 12, 13 |
-| US-009 어느 기기·입력 방식에서도 계획 | 9, 10, 11, 12, 13 |
-| US-010 재시작 후에도 계획 신뢰 (supporting) | 5, 6, 9, 10, 13 |
+| Story                                       | Steps                  |
+| ------------------------------------------- | ---------------------- |
+| US-001 이번 주 계획 확인                    | 3, 4, 7, 8, 11, 12, 13 |
+| US-002 할 일 빠르게 기록                    | 5, 6, 11, 12, 13       |
+| US-003 할 일 내용 유지보수                  | 7, 8, 11, 12, 13       |
+| US-004 할 일을 실제 시간에 배치             | 3, 4, 11, 12, 13       |
+| US-005 충돌을 이해하고 해결                 | 7, 8, 11, 12, 13       |
+| US-006 계획에서 다시 빼기                   | 11, 12, 13             |
+| US-007 실행 완료 기록                       | 7, 8, 11, 12, 13       |
+| US-008 목록으로 누락 점검                   | 11, 12, 13             |
+| US-009 어느 기기·입력 방식에서도 계획       | 9, 10, 11, 12, 13      |
+| US-010 재시작 후에도 계획 신뢰 (supporting) | 5, 6, 9, 10, 13        |
 
 ## Completion Gate
 

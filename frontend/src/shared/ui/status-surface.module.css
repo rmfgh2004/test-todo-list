@@ -1,0 +1,133 @@
+.error {
+  width: min(34rem, calc(100% - 2rem));
+  margin: 4rem auto;
+  padding: 1.5rem;
+  border: 1px solid var(--color-danger-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-raised);
+  box-shadow: var(--shadow-lg);
+}
+
+.error h2 {
+  margin: 0.25rem 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.error p {
+  color: var(--color-text-muted);
+}
+
+.error code {
+  display: block;
+  margin: 1rem 0;
+  padding: 0.75rem;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-subtle);
+}
+
+.error button {
+  border: 0;
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 1rem;
+  color: white;
+  background: var(--color-accent);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.error button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.requestId {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 1rem 0;
+  padding: 0.65rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-subtle);
+}
+
+.requestId span {
+  color: var(--color-text-muted);
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.requestId code {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: transparent;
+  text-overflow: ellipsis;
+}
+
+.requestId button {
+  padding: 0.4rem 0.6rem;
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.loading {
+  width: min(32rem, calc(100% - 2rem));
+  display: grid;
+  gap: 0.65rem;
+  margin: 3rem auto;
+  padding: 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-raised);
+}
+
+.skeletonBlock {
+  display: block;
+  height: 0.8rem;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-subtle),
+    var(--color-border),
+    var(--color-surface-subtle)
+  );
+  background-size: 200% 100%;
+  animation: skeleton 1.2s ease-in-out infinite;
+}
+
+.loadingHidden {
+  visibility: hidden;
+}
+
+.loading span:nth-child(2) {
+  width: 72%;
+}
+
+.loading span:nth-child(3) {
+  width: 44%;
+}
+
+@keyframes skeleton {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeletonBlock {
+    background: var(--color-border);
+    animation: none;
+  }
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--color-danger-text);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}

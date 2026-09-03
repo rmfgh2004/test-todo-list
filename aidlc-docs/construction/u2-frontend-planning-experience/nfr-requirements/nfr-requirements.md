@@ -33,6 +33,7 @@ Bundle ceiling and render measurement are separate gates: the ceiling blocks eve
 | NFR-004 | Every state transition announces exactly one concise ARIA-live message; conflicts and failures use the assertive region, outcomes the polite region. | RTL live-region assertions. |
 | NFR-004 | Priority, today, weekend, conflict and completion each carry a non-colour cue. | Component assertions plus the manual contrast/reading-order checklist. |
 | NFR-004 | The full journey works at 320px with no horizontal clipping and no overlapping text. | Playwright mobile viewport run. |
+| NFR-004 | `prefers-reduced-motion` disables the loading-skeleton shimmer animation in favour of static placeholders (UR-066, Tempo Phase 1). | Vitest media-query test + manual check. |
 
 Contrast ratios and reading order that axe cannot decide remain on the manual review checklist and
 are recorded per release rather than automated.

@@ -11,12 +11,12 @@
 
 ### 승인 완료된 게이트
 
-| 게이트 | 상태 |
-|---|---|
-| U1 전체 (백엔드) | 승인 완료, `origin/main`(2cd6c4a)에 반영 |
-| U2 Functional Design | 승인 완료 |
-| U2 NFR Requirements | 승인 완료 |
-| U2 NFR Design | **이번 세션에서 승인 완료** |
+| 게이트                           | 상태                                           |
+| -------------------------------- | ---------------------------------------------- |
+| U1 전체 (백엔드)                 | 승인 완료, `origin/main`(2cd6c4a)에 반영       |
+| U2 Functional Design             | 승인 완료                                      |
+| U2 NFR Requirements              | 승인 완료                                      |
+| U2 NFR Design                    | **이번 세션에서 승인 완료**                    |
 | U2 Code Generation Part 1 (계획) | **이번 세션에서 승인 완료** (Q1/Q2/Q3 = A/A/A) |
 
 ### 이번 세션에서 확정된 결정 3건
@@ -86,15 +86,15 @@
 계획서 **Step 5**부터 순서대로 이어가면 된다. 각 단계는 test-first이며, 완료 즉시 계획서
 체크박스를 `[x]`로 갱신하는 것이 규칙이다(AI-DLC 규칙: 같은 상호작용 안에서 갱신).
 
-| 다음 | 내용 |
-|---|---|
-| Step 3~4 | **완료** — 순수 시간·그리드 코어, fast-check PBT, seed `20260901` |
-| Step 5~6 | MSW 핸들러 → fetch 래퍼, 오류 정규화기(`SafeApiError` 7종), 연결 모니터(5초/2분) |
-| Step 7~8 | 캐시 키·범위 무효화, 스냅샷 롤백, single-flight, S-F03 상태기계 |
-| Step 9~10 | **시안 15장을 열어 토큰 추출** → 라이트/다크 토큰, 셸, 오류 경계, live region 2개, 배너 |
-| Step 11~12 | 기능 슬라이스 F-C02~F-C07 |
-| Step 13 | Playwright(webServer로 U1 기동) + axe 차단 + 번들·용량·npm audit·SBOM |
-| Step 14 | `frontend/README.md` + code-summary/test-summary/traceability/security-review |
+| 다음       | 내용                                                                                    |
+| ---------- | --------------------------------------------------------------------------------------- |
+| Step 3~4   | **완료** — 순수 시간·그리드 코어, fast-check PBT, seed `20260901`                       |
+| Step 5~6   | MSW 핸들러 → fetch 래퍼, 오류 정규화기(`SafeApiError` 7종), 연결 모니터(5초/2분)        |
+| Step 7~8   | 캐시 키·범위 무효화, 스냅샷 롤백, single-flight, S-F03 상태기계                         |
+| Step 9~10  | **시안 15장을 열어 토큰 추출** → 라이트/다크 토큰, 셸, 오류 경계, live region 2개, 배너 |
+| Step 11~12 | 기능 슬라이스 F-C02~F-C07                                                               |
+| Step 13    | Playwright(webServer로 U1 기동) + axe 차단 + 번들·용량·npm audit·SBOM                   |
+| Step 14    | `frontend/README.md` + code-summary/test-summary/traceability/security-review           |
 
 **Step 9~10 진입 시 반드시 할 것**: `aidlc-inputs/design/`의 PNG 15장을 실제로 열어 팔레트·간격·
 타이포를 추출한다. 지금까지는 이미지를 직접 열지 않고 Inception 단계의 요약(주간 타임테이블,
@@ -177,3 +177,42 @@ cd ../backend && ./mvnw -Dtest=OpenApiContractDriftTest test
 후속 구현 업데이트(2026-09-01): Steps 3~4 순수 시간·그리드 코어와 테스트는 `24f1077`
 (`feat(frontend): add pure planning time and grid core`)로 커밋됐다. 이후 AI-DLC 상태·계획·감사·
 보안 리뷰 문서는 별도의 문서 커밋으로 관리한다.
+
+후속 구현 업데이트(2026-09-01 20:52): Steps 5~6 전송 계층은 구현·검증 완료됐으며 아직 커밋하지
+않았다. 생성 계약 기반 응답 검증, 요청 ID, 안전 오류 정규화, allowlist 쿼리, typed MSW와
+전송 실패 전용 연결 모니터를 추가했다. `npm run verify`는 62개 테스트, 라인 93.80%, 브랜치
+82.96%, 58.0KB gzip으로 통과한다. 다음 승인 계획 항목은 Step 7이다. 별도 Swagger 401 제보는
+로컬 네 경로 모두 200이고 사용자가 직접 문서 표시를 확인해 보안 코드 변경 없이 종료했다.
+
+후속 구현 업데이트(2026-09-01 21:07): Steps 7~8 캐시 정책과 mutation coordinator를 test-first로
+완료했으며 아직 커밋하지 않았다. 구현 전 두 suite가 모듈 부재로 실패했고, 구현 후 집중 테스트 9개와
+전체 71개가 통과한다. 라인 93.05%, 브랜치 81.27%, 번들 58.0KB다. 다음은 실제 디자인 입력을 직접
+열어 비교한 뒤 Step 9 테스트와 Step 10 토큰·앱 셸을 구현한다.
+
+후속 구현 업데이트(2026-09-01 21:20): Steps 9~10을 완료했으며 아직 커밋하지 않았다. 15개 PNG를
+모두 직접 확인해 공통 시각 언어만 토큰으로 도출했고, 범위 밖 보드·태그·반복·담당자는 제거했다.
+라이트/다크, 768px 반응형, 좌측 백로그+7일/1일 그리드, 주 탐색, 가용시간, 연결 배너, toast/live
+region, 로딩·빈 상태·오류와 `Retry-After` 버튼을 구현했다. 전체 83개 테스트, 라인 93.29%, 브랜치
+82.14%, 번들 64.3KB가 통과한다. Chromium 1440x900과 320x800 실렌더도 확인했다. 다음은 Step 11이다.
+
+후속 구현 업데이트(2026-09-01 21:54): Steps 11~12를 test-first로 완료했으며 아직 커밋하지 않았다.
+여섯 feature suite가 모듈 부재로 먼저 실패한 뒤 timetable/backlog/editor/scheduling/conflict/list를
+실제 생성 계약 기반 hook과 연결했다. create/update/delete, 충돌 rollback 후 후보 수락, 완료 처리의
+live MSW 통합 journey 3개가 통과한다. 이 과정에서 fetch를 모듈 로드 시 캡처하던 테스트 경계,
+coordinator 렌더 수명, 주차 범위 캐시 교체, URL 변경 후 재조회 결함을 고쳤다. `npm run verify`는
+98개 테스트, 라인 90.51%, 브랜치 81.85%, 함수 85.27%, 번들 84.2KB로 통과하고 U1 150개 테스트도
+통과한다. 다음 승인 계획 항목은 Step 13이다.
+
+후속 완료 업데이트(2026-09-02 20:29): Steps 13~14까지 모두 완료했다. Playwright가
+실제 U1을 test 프로파일로 기동·종료하며 desktop·320px 10개 여정을 통과한다. 전체
+101개 테스트, 라인 89.32%, 브랜치 82.54%, 함수 83.33%, axe serious/critical 0건,
+1,000-task 120ms/300ms, gzip 85.0KB/250KB, 취약점 0건, CycloneDX 1.6 SBOM 생성이
+통과한다. README와 code/test/traceability/security 증거를 완료했고, 중복 파일·수기
+전송 타입·미해결 체크리스트가 없다. 현재는 U2 Code Generation 명시적 승인 대기
+상태이며, 승인 전에 Build and Test로 넘어가지 않는다.
+
+후속 Tempo Phase 1 업데이트(2026-09-03 22:58): 승인된 10단계 Code Generation 계획을 모두
+구현했다. Tempo 토큰, 공용 우선순위 배지, dnd-kit 포인터/키보드 배치, 가용시간 미리보기,
+200ms/10s 스켈레톤, 구조화 롤백 피드백, 목록 마감일 그룹을 반영했다. `npm run verify` 108/108,
+실제 U1 desktop·320px E2E 10/10, A–Z 1/1, capacity 1/1, audit 취약점 0건, SBOM 재생성,
+OpenAPI drift 없음이 확인됐다. 현재는 Tempo Phase 1 Code Generation 명시적 승인 대기 상태다.

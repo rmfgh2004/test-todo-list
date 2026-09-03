@@ -1,0 +1,237 @@
+.panel {
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+}
+
+.panelHeader,
+.row,
+.actions,
+.taskMeta,
+.pagination {
+  display: flex;
+  align-items: center;
+}
+
+.panelHeader {
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.panelHeader h2,
+.panelHeader h3 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.muted,
+.empty {
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+
+.empty {
+  padding: 1.5rem 0.5rem;
+  text-align: center;
+}
+
+.taskList {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.taskCard {
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-accent-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-subtle);
+}
+
+.taskCard button:first-child {
+  padding: 0;
+  border: 0;
+  color: var(--color-text);
+  background: transparent;
+  font-weight: 750;
+  text-align: left;
+  cursor: pointer;
+}
+
+.taskMeta {
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.55rem;
+  color: var(--color-text-muted);
+  font-size: 0.7rem;
+}
+
+.badge {
+  display: inline-flex;
+  padding: 0.15rem 0.4rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 800;
+}
+
+.taskMeta button,
+.secondary,
+.pagination button {
+  border: 1px solid var(--color-border);
+  border-radius: 0.4rem;
+  padding: 0.35rem 0.55rem;
+  color: var(--color-text);
+  background: var(--color-surface-raised);
+  cursor: pointer;
+}
+
+.dialogBackdrop {
+  position: fixed;
+  z-index: 60;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgb(5 12 24 / 55%);
+}
+
+.dialog {
+  width: min(32rem, 100%);
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  color: var(--color-text);
+  background: var(--color-surface-raised);
+  box-shadow: var(--shadow-lg);
+}
+
+.dialog h2 {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+}
+
+.form {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.form label {
+  display: grid;
+  gap: 0.3rem;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.form input,
+.form textarea,
+.form select,
+.filters select {
+  min-height: 2.4rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.55rem 0.65rem;
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+.errorText {
+  margin: 0;
+  color: var(--color-danger-text);
+  font-size: 0.72rem;
+}
+
+.actions {
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.primary,
+.danger {
+  border: 0;
+  border-radius: var(--radius-sm);
+  padding: 0.55rem 0.9rem;
+  color: white;
+  background: var(--color-accent);
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.danger {
+  background: var(--color-danger-text);
+}
+
+.comparison {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem;
+}
+
+.comparison div {
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-subtle);
+}
+
+.filters {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.filters label {
+  display: grid;
+  gap: 0.25rem;
+  color: var(--color-text-muted);
+  font-size: 0.7rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.taskGroups {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.taskGroups h2 {
+  margin: 0 0 0.45rem;
+  font-size: 0.9rem;
+}
+
+.table th,
+.table td {
+  padding: 0.65rem;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.78rem;
+  text-align: left;
+}
+
+.pagination {
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 480px) {
+  .comparison {
+    grid-template-columns: 1fr;
+  }
+
+  .table th:nth-child(3),
+  .table td:nth-child(3) {
+    display: none;
+  }
+}

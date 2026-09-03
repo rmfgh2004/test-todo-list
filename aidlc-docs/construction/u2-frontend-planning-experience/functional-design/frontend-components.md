@@ -68,10 +68,18 @@ AppShell                                   F-C01
 - **Props**: `{weekContext, blocks, onOpenTask, onMoveRequest, onUnschedule}`.
 - **State**: none beyond derived geometry (`toGridPosition`).
 - **Renders**: 56 rows/day at a 15-minute pitch; today and weekend columns carry an icon/label as
-  well as colour (UR-016).
-- **States**: skeleton / ready / empty / error, each visually distinct (UR-065).
+  well as colour (UR-016). Each `ScheduleBlock` renders a priority badge (icon + text + colour, not
+  colour alone — UR-016) in addition to title and time range (Tempo Phase 1: this was previously only
+  implemented on `BacklogCard`, not on placed blocks).
+- **States**: skeleton / ready / empty / error, each visually distinct (UR-065); the skeleton state
+  follows UR-066 (structural chrome first, data-only placeholders, 200ms/10s thresholds,
+  `prefers-reduced-motion` support).
 - **A11y**: the grid is a semantic table-like structure; each block is a focusable element exposing
-  title, time range and completion state as text.
+  title, time range, priority and completion state as text.
+- **Design tokens (Tempo Phase 1 alignment)** — canonical light/dark hex values `shared/ui` tokens
+  must resolve to: text `#0f172a` / `#f1f5f9`, muted text `#475569` / `#cbd5e1`, border `#e2e8f0` /
+  `#334155`, accent `#4f46e5` / `#818cf8`, danger `#b91c1c` / `#fca5a5`, warning `#a16207` / `#fcd34d`,
+  success `#15803d` / `#86efac`. These replace ad hoc values already in `theme.ts`; no new token names.
 
 ### BacklogPanel / BacklogCard (F-C03) — FR-005
 
@@ -104,10 +112,13 @@ AppShell                                   F-C01
 - **Props**: `{taskId, estimateMinutes, expectedVersion, onProposal}`.
 - **State**: the S-F03 machine — `idle | proposing | saving | conflict | stale | failed`.
 - **Interaction paths** (all three produce the same `SlotProposal`):
-  1. **Pointer** — drag from a card or block, snap to the 15-minute grid, drop.
-  2. **Keyboard** — Space picks up, arrows move by one slot / one day, Enter confirms, Esc aborts,
-     with a persistent hint: "Space로 집고 방향키로 이동, Enter로 확정".
+  1. **Pointer** — drag from a card or block using dnd-kit's pointer sensor, snap to the 15-minute
+     grid, drop. (Tempo Phase 1: replaces the native HTML5 `draggable`/`onDrop` implementation, which
+     was a defect against the already-ratified `tech-stack-decisions.md` §1 dnd-kit decision.)
+  2. **Keyboard** — dnd-kit's keyboard sensor: Space picks up, arrows move by one slot / one day,
+     Enter confirms, Esc aborts, with a persistent hint: "Space로 집고 방향키로 이동, Enter로 확정".
   3. **Form** — date + start time inputs restricted to 00/15/30/45 within 08:00~22:00.
+  While a proposal is pending, the header capacity preview updates per UR-025.
 - **API**: `PUT /api/v1/tasks/{id}/schedule`, `DELETE /api/v1/tasks/{id}/schedule`.
 - **Rules**: UR-030~UR-035; a preview whose end passes 22:00 is refused before any request.
 
@@ -127,10 +138,14 @@ AppShell                                   F-C01
 - **Props**: `{query, page, onQueryChange, onToggleCompletion}`.
 - **State**: derived entirely from the URL — `status`, `scheduled`, `priority`, `sort`, `direction`,
   `page`, `size`.
-- **Renders**: title, priority, estimate, due date, scheduled time and completion per row.
+- **Renders**: title, priority, estimate, due date, scheduled time and completion per row, grouped by
+  due-date bucket (오늘 / 이번 주 / 완료— Tempo Phase 1, presentation-only: grouping is a client-side
+  re-partition of the existing paginated result by `dueDate`/`status`, not a new query parameter or
+  server capability) with a visible sort control surfacing the existing `sort`/`direction` URL state.
 - **API**: `GET /api/v1/tasks`, `PUT /api/v1/tasks/{id}/completion`.
 - **Rules**: unknown or out-of-bounds query values fall back to contract defaults rather than being
-  forwarded; empty results and an empty dataset are separate states.
+  forwarded; empty results and an empty dataset are separate states. Grouping never changes which rows
+  the current page contains, only how they are visually partitioned.
 
 ### API Client (F-C08) — NFR-003, NFR-007, NFR-008
 
@@ -148,9 +163,14 @@ AppShell                                   F-C01
 - `<LiveRegion>` — one polite ARIA-live region for outcomes, one assertive region for conflicts and
   failures. One concise message per transition (UR-035).
 - `<StatusSurface>` — loading skeletons, empty states, and error panels carrying the message, the
-  copyable request ID (`TMP-7Q4K-2F9A-8C31`) and a retry control.
+  copyable request ID (`TMP-7Q4K-2F9A-8C31`) and a retry control. The loading skeleton follows UR-066
+  (structural chrome renders immediately; only server-dependent regions show placeholders).
 - `<RetryButton>` — disabled until `Retry-After` elapses on a 429 (UR-061).
 - `<ErrorBoundary>` — keeps the header and navigation usable when a subtree fails.
+- `<RollbackToast>` (Tempo Phase 1, UR-067) — on a failed optimistic placement, names the restored
+  position and the position that failed to save with its reason, does not auto-dismiss, and renders at
+  least one concrete alternative-placement action. The corresponding `ScheduleBlock` at its restored
+  position carries a non-colour "되돌림" marker.
 
 ## 3. User Interaction Flows
 
@@ -198,8 +218,10 @@ failure restores the snapshot and announces the error with its request ID.
 
 `/api/v1/health` is not consumed by the UI; it stays an operator endpoint.
 
-## 6. Out of Scope (Q1)
+## 6. Out of Scope (Q1, refined by business-rules.md §9)
 
-Kanban board, assignee, tags, subtasks, comments, search, recurrence and natural-language task
-entry are not implemented and not stubbed. The design screens' visual language is adopted only for
-the components listed above; out-of-scope controls are removed, not disabled (UR-070~UR-072).
+Kanban board, multi-assignee capacity, tags, subtasks, comments, attachments, search, recurrence,
+natural-language task entry and the command palette are not implemented and not stubbed in this
+phase. The Tempo design screens' visual language is adopted only for the Phase 1 components listed
+above; out-of-scope controls are removed, not disabled (UR-070~UR-072). See
+`business-rules.md` §9 for the full Phase 2 backlog and why each item is deferred.

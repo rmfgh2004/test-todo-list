@@ -44,6 +44,7 @@ but only the server decides. A client check that disagrees with the server alway
 | UR-022 | FR-005 | each card shows title, priority, estimate and due date; an absent due date shows an empty state, not blank | render invariant |
 | UR-023 | Q3 | header capacity = `5880 - Σ estimateMinutes of incomplete scheduled tasks in the week`, floored at 0 | derived from the same payload as the grid |
 | UR-024 | Q3 | capacity is display-only and authorises nothing | no code path reads it before a mutation |
+| UR-025 | Tempo-P1 | while a placement is being proposed (drag or keyboard), the header capacity shows the resulting value if confirmed (e.g. "(−1h 30m)"), computed client-side from the pending proposal | preview only; reverts to the server-derived value on cancel; never sent to the server |
 
 ## 4. Scheduling Interaction Rules
 
@@ -86,14 +87,53 @@ but only the server decides. A client check that disagrees with the server alway
 | UR-063 | NFR-003 | a rendered error uses only the server's `code`, `message`, `requestId` and allowlisted field names | never the raw response body |
 | UR-064 | NFR-008 | an unexpected render failure is contained by an error boundary that keeps navigation usable | boundary test fails |
 | UR-065 | FR-001 | loading, empty, error and success are four distinct states; a load never renders as an empty result | state test fails |
+| UR-066 | Tempo-P1 | the loading state renders structural chrome (time axis, weekday header, grid lines) immediately from static geometry; only server-dependent content (blocks, backlog cards) shows skeleton placeholders; a response under 200ms never shows a skeleton; a request exceeding 10s transitions to the error state; `prefers-reduced-motion` shows static placeholders with no shimmer animation | visual regression + reduced-motion test |
+| UR-067 | Tempo-P1 | a failed optimistic placement (UR-052 rollback) shows the reverted block with a non-colour "되돌림" marker at its restored position; the failure toast names both the restored position and the position that failed to save, states the reason, does not auto-dismiss, and offers at least one concrete alternative placement action | component test asserts both positions and the action are present |
 
-## 8. Scope Rules (Q1 decision)
+## 8. Scope Rules (Q1 decision, refined by the Tempo rework decision below)
 
 | ID | Rule |
 |---|---|
-| UR-070 | Only FR-001~FR-011 capabilities ship. The kanban board, assignee, tags, subtasks, comments, search, recurrence and natural-language entry are not implemented and not stubbed. |
+| UR-070 | Only FR-001~FR-011 capabilities ship in this phase. The kanban board, multi-assignee capacity, tags, subtasks, comments, attachments, search, recurrence, natural-language entry and the command palette are not implemented and not stubbed until the Phase 2 requirements round in §9 is run and approved. |
 | UR-071 | The visual language of the design screens is adopted for in-scope features; out-of-scope controls are removed rather than disabled. |
 | UR-072 | No U2 change requires a U1 contract change. Any such need stops work and is raised as a contract question. |
+
+## 9. Tempo Design Rework (decided 2026-09-03)
+
+A more detailed design system ("Tempo", `aidlc-inputs/design/tempo/*.dc.html`) was imported to replace the
+original PNG-screenshot design reference. The user split adoption into two phases (see
+`aidlc-docs/audit.md`, "Tempo 디자인 재작업"):
+
+**Phase 1 (this pass)** — visual/interaction polish of already-in-scope screens only, no new business
+rules, no new backend contract: grid basic states (Tempo 1a/1b), drag placement (1c, dnd-kit
+remediation — see NFR-004 note below), list view grouping (2a, presentation-only), loading skeleton
+fidelity (3a), and rollback visualization (3e). Covered by UR-025, UR-066, UR-067 above and the
+`frontend-components.md` updates for F-C02/F-C05/F-C09.
+
+**Excluded from Phase 1 and deferred to Phase 2** (requires a new Requirements Analysis round before
+any design/code work):
+- Multi-assignee weekly capacity (Tempo 1a-2c) — no user/assignee concept exists in U1's domain model.
+- Kanban board (2b) — status model only has TODO/COMPLETED; adding 진행중/보류 reopens a rejected scope
+  decision (`aidlc-inputs/01-tech-stack-decisions.md` §7).
+- Task detail expansion — subtasks, attachments, comments (2c).
+- Natural-language quick-create (2d) and the command palette (2f).
+- Recurring events (2e), which also needs a holiday-calendar data source not present anywhere in the
+  repo.
+- The 429 save-queue-and-auto-retry behaviour (3d) — directly reopens the ratified UR-061 / NFR-004
+  "no pending-save queue exists" decision.
+- **The 1d overlap-warning screen in its entirety.** Tempo 1d's "겹쳐 두기" (keep-both) action directly
+  contradicts UR-041 ("exactly three actions: keep existing, move to nextCandidate, cancel — no '겹쳐
+  두기', not even disabled"). Rather than silently reinterpreting a ratified rule, this is deferred to
+  Phase 2 alongside the rules that would need to change (UR-040~UR-045).
+- Radix UI is not added as a dependency in Phase 1: none of the Phase 1 screens need a new Radix
+  primitive (Popover/Select/RadioGroup/DropdownMenu only become necessary for the deferred 2b-2f, 1d
+  screens), and `tech-stack-decisions.md` §"Rejected Alternatives"-adjacent policy is "a new library ...
+  is not added when React, the browser platform or an existing dependency provides a small testable
+  implementation." It is reconsidered when Phase 2 is scoped.
+- dnd-kit **is** brought into Phase 1: it was already ratified in `tech-stack-decisions.md` §1
+  ("Approved baseline; provides pointer and keyboard sensors, which NFR-004 requires") but the current
+  implementation uses native HTML5 drag-and-drop instead (a pre-existing defect against the unit's own
+  approved design, not a new decision). Phase 1 corrects this.
 
 ## Test Obligation
 
