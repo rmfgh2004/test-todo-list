@@ -8,6 +8,49 @@ H2 database, no remote dependency and no user accounts: it is a single-user tool
   `adapter.in.web`, outbound `adapter.out.persistence`, cross-cutting `platform`
 - All wall times are Asia/Seoul, on a 15-minute grid, inside the 08:00~22:00 planning window
 
+## SDLC Pod environment
+
+The minimum toolchain is a **JDK 17** (not a JRE), Bash, CA certificates, `curl` or `wget`, and
+`unzip`. Do not install a global Maven: `./mvnw` uses Maven Wrapper 3.3.4 and downloads the pinned
+Apache Maven 3.9.11 distribution. The verified environment used Eclipse Temurin 17.0.18.
+
+The application stack is Spring Boot 4.1.1 with Spring MVC, Validation, Data JPA, Security, Actuator
+and Flyway; H2 is pinned to 2.3.232 and Swagger UI to 5.29.4. Test/build plugins are jqwik 1.9.3,
+ArchUnit 1.4.2, JaCoCo 0.8.15, Spotless 3.9.0, CycloneDX 2.9.1 and OWASP Dependency-Check 12.1.8.
+Spring starter transitive versions come from the Spring Boot 4.1.1 dependency management BOM.
+
+The Pod needs access to Maven Central on a cold start, or a pre-populated writable Maven repository
+cache. Generated output is written to `target/`; the optional persistent database is written under
+`data/` and needs a volume. `CLAUDE.md` contains the complete cache, resource, artifact and
+separate-Pod contract for automated agents.
+
+For a separated backend repository, use a Linux image that contains JDK 17 (for example, a Temurin
+17 JDK image), then install Bash/Git/CA certificates/curl/unzip if the image omits them. Pin the
+selected image by digest in the SDLC platform. Maven and every Java framework are installed/resolved
+by `./mvnw`; do not bake an unrelated global Maven version into the Pod.
+
+### Pod commands
+
+```bash
+# bootstrap/version probe
+java -version
+./mvnw -version
+
+# standard build and test gate
+./mvnw verify
+
+# local in-memory runtime
+./mvnw spring-boot:run
+
+# health and API documentation
+curl -fsS http://127.0.0.1:8080/actuator/health
+```
+
+The default bind is loopback-only (`127.0.0.1:8080`). In a deliberately isolated multi-Pod test
+namespace, external binding requires `--server.address=0.0.0.0` plus an exact
+`--planning.platform.allowed-origins=<frontend-origin>` value; wildcard origins are rejected. Never
+expose this unauthenticated local-only service to the public internet.
+
 ## Run
 
 ### In-memory (default)
@@ -37,17 +80,17 @@ and TCP server are disabled in every profile.
 
 ## API
 
-| Method | Path | Purpose |
-|---|---|---|
-| GET | `/api/v1/planning/weeks/{weekStart}` | one Monday-anchored week plus the backlog |
-| GET | `/api/v1/tasks` | filtered, bounded task page |
-| POST | `/api/v1/tasks` | create a task in the backlog |
-| GET | `/api/v1/tasks/{id}` | task detail |
-| PATCH | `/api/v1/tasks/{id}` | replace the full content set |
-| DELETE | `/api/v1/tasks/{id}` | delete after explicit confirmation |
-| PUT | `/api/v1/tasks/{id}/schedule` | place or move on the timetable |
-| DELETE | `/api/v1/tasks/{id}/schedule` | unschedule, keeping all content |
-| PUT | `/api/v1/tasks/{id}/completion` | set the desired completion state |
+| Method | Path                                 | Purpose                                   |
+| ------ | ------------------------------------ | ----------------------------------------- |
+| GET    | `/api/v1/planning/weeks/{weekStart}` | one Monday-anchored week plus the backlog |
+| GET    | `/api/v1/tasks`                      | filtered, bounded task page               |
+| POST   | `/api/v1/tasks`                      | create a task in the backlog              |
+| GET    | `/api/v1/tasks/{id}`                 | task detail                               |
+| PATCH  | `/api/v1/tasks/{id}`                 | replace the full content set              |
+| DELETE | `/api/v1/tasks/{id}`                 | delete after explicit confirmation        |
+| PUT    | `/api/v1/tasks/{id}/schedule`        | place or move on the timetable            |
+| DELETE | `/api/v1/tasks/{id}/schedule`        | unschedule, keeping all content           |
+| PUT    | `/api/v1/tasks/{id}/completion`      | set the desired completion state          |
 
 The contract is `openapi/planning-api.yaml`. `OpenApiContractDriftTest` fails the build if the routing
 table and the document disagree, so the file is always accurate.

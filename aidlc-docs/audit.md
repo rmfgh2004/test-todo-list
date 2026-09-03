@@ -2255,3 +2255,71 @@
   푸시 직후 로컬 HEAD와 원격 ref가 일치함을 확인했다.
 
 ---
+
+## SDLC 테스트 Pod 부트스트랩 문서화 요청
+
+- **[타임스탬프]**: 2026-09-03T23:41:00+09:00
+- **[사용자 지시 원문]**:
+  > 아 그리고 각frontend/backend 기술스택 이나 버전 실행 방법 등을 모두 README, CALUDE md 에 작성해줘 
+  >
+  > 왜냐면 sdlc 테스트 용도로 해당 레포를 사용할건데 
+  > 해당 동작이 새로 pod를 생성하고 그 위에 각 레포에 해당하는 버전이나 프레임워크를 설치해야돼서 그래 알아야하는 모든 정보를 작성해줘
+- **[AI 제안 요약]**: 실제 `pom.xml`, Maven Wrapper, `package.json`/lockfile, Vite, Playwright,
+  Spring 설정과 기존 모듈 README를 기준으로 Java/Node/프레임워크의 정확한 버전, Pod OS 도구,
+  네트워크·포트·환경변수, 설치·실행·검증, 헬스체크, 캐시/쓰기 경로와 산출물을 문서화한다.
+  E2E 컨테이너에는 Java+Node+Chromium이 동시에 필요하다는 점과 별도 Pod에서 loopback 기본값을
+  사용할 수 없는 점을 명시한다. `CLAUDE.md` 규칙 본문 동기화 요구 때문에 `AGENTS.md`와 Kiro
+  진입점에도 같은 부트스트랩 계약을 반영한다.
+- **[사용자 판단·승인 근거]**: SDLC 자동화가 매 실행마다 새 Pod를 만들기 때문에 사전 설치된 로컬
+  도구에 의존할 수 없고, 저장소만으로 런타임과 테스트 환경을 결정할 수 있어야 한다.
+- **[최종 결정]**: 루트/모듈 README와 세 AI 진입점에 재현 가능한 SDLC Pod 환경 계약을 작성하고,
+  실제 버전 출력, 문서 포맷, AI-DLC 규칙 동기화 스크립트로 검증한다.
+
+---
+
+## SDLC 테스트 Pod 문서 범위 정정
+
+- **[타임스탬프]**: 2026-09-03T23:47:00+09:00
+- **[사용자 지시 원문]**:
+  > 이거는 frontend/ backend 내부 README 및 CLAUDE md에 작성해주면 돼 어차피 repo 분리할거라.
+- **[AI 제안 요약]**: 상위 저장소의 README/CLAUDE/AGENTS/Kiro 진입점은 변경하지 않고, 분리 후
+  각 저장소 루트가 될 `backend/README.md`, `backend/CLAUDE.md`, `frontend/README.md`,
+  `frontend/CLAUDE.md` 네 파일만 자체 완결형으로 작성하도록 범위를 정정했다. 먼저 추가했던 루트
+  README 변경은 원복했다.
+- **[사용자 판단·승인 근거]**: frontend와 backend가 서로 다른 저장소로 분리되므로 상위 모노레포
+  문서에만 적으면 새 Pod가 checkout한 개별 저장소에서 정보를 읽을 수 없다.
+- **[최종 결정]**: 모든 설치·버전·실행·검증 계약은 각 모듈 내부 README와 CLAUDE에 기록하고,
+  frontend 통합 gate가 요구하는 `../backend` sibling checkout 조건도 명시한다.
+
+---
+
+## SDLC 테스트 Pod 부트스트랩 문서화 완료
+
+- **[타임스탬프]**: 2026-09-03T23:55:24+09:00
+- **[사용자 지시 원문]**:
+  > (새 사용자 입력 없음 — SDLC 테스트 Pod 문서화 범위 정정에 따른 실행 결과)
+- **[AI 제안 요약]**: backend에는 Java/Maven/Spring/H2/Flyway/Swagger/테스트·보안 도구, profile,
+  health, CORS, Secret, cache/PVC와 Maven 명령을 기록했다. frontend에는 package.json의 모든 직접
+  dependency exact version, Node/npm, Vite, 환경변수, 전체 npm 명령, Chromium 설치, artifact,
+  resource와 분리 저장소 sibling layout을 기록했다.
+- **[사용자 판단·승인 근거]**: 매번 새 Pod에서 빌드하는 SDLC 사용 목적상 로컬 사전 설치나 암묵적
+  경로를 전제로 할 수 없어 네 모듈 문서만 읽고 cold bootstrap할 수 있어야 한다.
+- **[최종 결정]**: 네 내부 문서를 완성했다. 모든 frontend 직접 dependency/버전과 주요 backend
+  런타임/도구, 포트/환경변수 존재 검사가 통과했고, Prettier 및 AI-DLC 규칙 동기화 검사도 통과했다.
+  상위 `README.md`, `CLAUDE.md`, `AGENTS.md`, Kiro 진입점에는 변경이 없다.
+
+---
+
+## SDLC Pod 문서 Git 푸시 요청
+
+- **[타임스탬프]**: 2026-09-04T00:00:00+09:00
+- **[사용자 지시 원문]**:
+  > 깃에 푸시해줘
+- **[AI 제안 요약]**: 상위 README/CLAUDE/AGENTS/Kiro 진입점이 변경되지 않았음을 확인하고,
+  backend/frontend 내부 README·CLAUDE 네 파일과 필수 audit 기록만 커밋해 `origin/main`에 푸시한다.
+- **[사용자 판단·승인 근거]**: 분리 저장소의 SDLC Pod가 원격 checkout 직후 환경 계약을 읽을 수
+  있도록 완성된 문서를 원격 저장소에 반영하라고 명시했다.
+- **[최종 결정]**: 문서 변경을 검증 후 커밋하고 `origin/main`에 푸시한 다음 로컬/원격 ref와 작업
+  트리 상태를 확인한다.
+
+---

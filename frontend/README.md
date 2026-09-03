@@ -9,6 +9,45 @@ generated OpenAPI contract.
 - Node.js 20.19 or newer and npm
 - Java 17 or newer for real-backend E2E
 
+## SDLC Pod environment
+
+Use Node.js **20.19 or newer**; Node 20.19.x is the reproducible baseline and the verified local run
+used Node 26.8.1/npm 11.19.0. The lockfile is npm lockfile v3, so use `npm ci`, never an unconstrained
+`npm install`, in a clean Pod. A cold install requires npm registry access or a pre-populated npm
+cache.
+
+Runtime dependencies are React/React DOM 19.2.8, TanStack React Query 5.102.8, dnd-kit core 6.3.1,
+dnd-kit utilities 3.2.2 and Lucide React 1.38.0. The main toolchain is TypeScript 5.9.3, Vite 8.2.2,
+Vitest 4.1.11, Playwright 1.62.1, ESLint 9.39.5 and Prettier 3.9.6; all direct versions are exact in
+`package.json` and the full tree is pinned by `package-lock.json`.
+
+Other directly pinned test/build packages are axe-core and `@axe-core/playwright` 4.13.0, jsdom
+30.0.1, Testing Library React 16.3.3, user-event 14.6.6, jest-dom 7.0.1, fast-check 4.9.0, MSW
+2.15.0, openapi-typescript 7.13.0 and CycloneDX npm 6.0.1.
+
+After repository separation, the full verification checkout must preserve this sibling layout:
+`<workspace>/frontend` and `<workspace>/backend`. Contract scripts read
+`../backend/openapi/planning-api.yaml`, and Playwright starts `../backend/mvnw`; frontend-only
+checkout is sufficient only for isolated type, lint, unit and build commands.
+
+For build/unit tests the Pod needs Node and npm only. Real-backend Playwright additionally needs
+**JDK 17, Bash, CA certificates, curl/wget, unzip, Chromium and its Linux libraries in the same test
+container**, because Playwright starts `../backend/mvnw` itself. On Debian/Ubuntu-compatible runners:
+
+```bash
+npm ci
+./node_modules/.bin/playwright install --with-deps chromium
+```
+
+Writable output paths are `node_modules/`, `dist/`, `coverage/`, `test-results/` and `sbom.json`.
+Reusable caches are the npm cache and the Playwright browser directory. `CLAUDE.md` contains the
+complete cache, networking, resource and artifact matrix for automated agents.
+
+For a separated frontend repository, a Node 20.19.x Linux image is the build/unit-test baseline;
+pin the image by digest in the SDLC platform. The full E2E image must additionally install JDK 17
+and then run the local Playwright install command above. npm installs React and every JavaScript
+framework from the lockfile; no global Vite, TypeScript, Vitest or Playwright installation is used.
+
 ## Install and run
 
 ```bash
@@ -25,6 +64,11 @@ VITE_USE_MOCK=1 npm run dev
 
 `VITE_API_BASE_URL` may select another loopback U1 URL. Mock code and the service worker are blocked
 from production output.
+
+For an isolated multi-Pod test namespace, `npm run dev -- --host 0.0.0.0` exposes Vite and
+`VITE_API_BASE_URL` must be a Backend URL that the **browser**, not merely the frontend Pod, can
+resolve. Configure the Backend CORS allowlist with the exact frontend Origin. The default loopback
+configuration remains the recommended single-Pod/port-forward setup.
 
 ## Contract and verification
 
